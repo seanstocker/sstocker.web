@@ -1,0 +1,89 @@
+﻿@{
+    Layout = "_budgetLayout";
+    ViewBag.Title = "Account Settings";
+    ViewBag.AccountName = Model.AccountName;
+    ViewBag.AccountImage = Model.AccountImage;
+}
+
+@model sstocker.budget.ViewModels.AccountSettingsViewModel
+
+<html>
+<body>
+    @if (Model.HasSharedAccount)
+    {
+        @if (Model.SharedAccountSettings)
+        {
+            <h2>Shared Account Settings</h2>
+            <h4>@Html.ActionLink("Go to Personal Settings", "Settings", "Account", new { shared = false })</h4>
+        }
+        else
+        {
+            <h2>Personal Account Settings</h2>
+            <h4>@Html.ActionLink("Go to Shared Settings", "Settings", "Account", new { shared = true })</h4>
+        }
+    }
+    else
+    {
+        <h2>Account Settings</h2>
+    }
+
+    @foreach (var item in Model.Categories)
+    {
+        <hr />
+        @Html.Raw(item.HtmlRow());
+    }
+
+    <br />
+    <input style="width: 100%" type="button" value="Save" onclick="Save()" />
+    <br />
+    <br />
+    <input style="width: 100%" type="button" value="Cancel" onclick="window.location.href='@Url.Action("Index", "Home")';" />
+    <br />
+    <br />
+
+    <script>
+        function onCheckboxChecked(name) {
+            var checkBox = document.getElementById(name + "_IsActive");
+            var hiddenValuesDiv = document.getElementById(name + "_Hidden_Values");
+            if (checkBox.checked == true){
+                hiddenValuesDiv.style.display = "block";
+            } else {
+                hiddenValuesDiv.style.display = "none";
+            }
+        }
+
+        function activateAmountBox(name) {
+            var checkBox = document.getElementById(name + "_Unlimited");
+            var hiddenValuesDiv = document.getElementById(name + "_Amount_Hidden_Values");
+            if (checkBox.checked == true) {
+                hiddenValuesDiv.style.display = "none";
+            } else {
+                hiddenValuesDiv.style.display = "block";
+            }
+        }
+
+        function Save() {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: '@Url.Action("SaveSettings", "Account")',
+                    data: {
+                        model: @Html.Raw(@Model.GetHtmlValues()),
+                        isSharedAccount: '@Model.SharedAccountSettings'
+                    },
+                    error: function () {
+                        alert("There is a Problem, Try Again!");
+                    },
+                    success: function (result) {
+                        if (result.status == true) {
+                            window.location.href = '@Url.Action("Index", "Home")';
+                        }
+                        else {
+                            alert(result.message);
+                        }
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

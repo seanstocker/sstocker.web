@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "_budgetLayout";
+    ViewBag.Title = "Budget Summary";
+    ViewBag.AccountName = Model.AccountName;
+    ViewBag.AccountImage = Model.AccountImage;
+}
+@model sstocker.budget.ViewModels.BudgetSummaryModel
+
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Budget Summary</h1>
+</div>
+
+@foreach (var table in Model.CategoryTables)
+{
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            @if (table.SharedBudget)
+            {
+                <h6 class="m-0 font-weight-bold text-primary">Shared @table.Category.Name</h6>
+            }
+            else
+            {
+                <h6 class="m-0 font-weight-bold text-primary">@table.Category.Name</h6>
+            }
+        </div>
+        <div>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="@table.TableId" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>SpentDate</th>
+                            @*<th>Percentage</th>*@
+                            <th>ExpireDate</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th><b>@table.TotalRow.Name</b></th>
+                            <th colspan="3">@table.TotalRow.Amount.ToString("$0.00")</th>
+                            @*<th colspan="2">@table.TotalRow.Percentage.ToString("P")</th>*@
+                        </tr>
+                        <tr>
+                            <th><b>@table.LeftRow.Name</b></th>
+                            <th colspan="3">@table.LeftRow.Amount.ToString("$0.00")</th>
+                            @*<th colspan="2">@table.LeftRow.Percentage.ToString("P")</th>*@
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in table.Rows)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @item.Amount.ToString("$0.00")
+                                </td>
+                                <td>
+                                    @item.SpentDate.ToShortDateString()
+                                </td>
+                                @*<td>
+                                        @item.Percentage.ToString("P")
+                                    </td>*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExpireDate)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <hr />
+
+        </div>
+    </div>
+}
+
+<script src="~/vendor/sb-admin-2/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="~/vendor/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var list = @Json.Serialize(Model.GetTableNames());
+        for (var x = 0; x < list.length; x++) {
+            var item = list[x];
+            $('#' + item).DataTable({ "searching": false, "lengthChange": false, "order": [[ 3, 'asc' ]], "pageLength": 5 });
+        }
+    });
+</script>

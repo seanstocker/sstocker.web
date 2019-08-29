@@ -1,0 +1,137 @@
+﻿@{
+    Layout = "_budgetLayout";
+    ViewBag.Title = "Expense Summary";
+    ViewBag.AccountName = Model.AccountName;
+    ViewBag.AccountImage = Model.AccountImage;
+}
+@model sstocker.budget.ViewModels.ExpenseSummaryModel
+
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Expense Summary</h1>
+    <div>
+        <a href="@Url.Action("AddExpense", "Expense")" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Add Expense</a>
+    </div>
+</div>
+@if (Model.HasSharedAccount)
+{
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h5><a href="@Url.Action("SharedExpenseSummary", "Expense")">Go to Shared Expense Summary</a></h5>
+    </div>
+}
+<div class="dropdown mb-4">
+    <button class="btn btn-primary dropdown-toggle" style="width: 100%;" type="button" id="timePeriodDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="mr-2 d-none d-lg-inline">@Model.TimePeriod.ToString()</span>
+    </button>
+    <div class="dropdown-menu animated--fade-in" style="width: 100%;" aria-labelledby="timePeriodDropdown" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
+        @foreach (int val in Enum.GetValues(typeof(sstocker.budget.Enums.ExpenseSummaryTimePeriod)))
+        {
+            var name = Enum.GetName(typeof(sstocker.budget.Enums.ExpenseSummaryTimePeriod), val);
+            <a class="dropdown-item" href="@Url.Action("ExpenseSummary", "Expense", new { TimePeriod = name })">
+                @name
+            </a>
+        }
+    </div>
+</div>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            Personal Expenses
+        </h6>
+    </div>
+    <div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        @for (int x = 0; x < Model.ColumnNames.Count; x++)
+                        {
+                            <th>@Model.ColumnNames[x]</th>
+                        }
+                        <th>Edit/Delete</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th colspan="2">Total</th>
+                        <th colspan="3">@Model.Expenses.Sum(e => e.Amount).ToString("$#,###,##0.00")</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @for (int x = 0; x < Model.Expenses.Count; x++)
+                    {
+                        <tr>
+                            @for (int y = 0; y < Model.ColumnNames.Count; y++)
+                            {
+                                <td>@Model.GetExpenseColumn(x, y)</td>
+                            }
+                            <td width="1%">
+                                <a href="@Url.Action("EditExpense", "Expense", new { id = Model.Expenses[x].ExternalGuid })" class="btn btn-info btn-circle btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="" class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#deleteModal"
+                                   data-expenseid="@Model.Expenses[x].ExternalGuid" data-store="@Model.Expenses[x].Store" data-amount="@Model.Expenses[x].Amount" data-category="@Model.Expenses[x].Category" data-spentdate="@Model.Expenses[x].SpentDate.ToShortDateString()">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Logout Modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Expense?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the expense:<br /><br />
+                Store: <label id="Store"></label><br />
+                Amount: <label id="Amount"></label><br />
+                Category: <label id="Category"></label><br />
+                SpentDate: <label id="SpentDate"></label><br />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger" id="deleteExpenseModalButton" href="@Url.Action("Logout", "Account")">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/vendor/sb-admin-2/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="~/vendor/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var expenseId = button.data('expenseid') // Extract info from data-* attributes
+        var store = button.data('store') // Extract info from data-* attributes
+        var amount = button.data('amount') // Extract info from data-* attributes
+        var category = button.data('category') // Extract info from data-* attributes
+        var spentDate = button.data('spentdate') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        $("#Store").text(store);
+        $("#Amount").text(amount);
+        $("#Category").text(category);
+        $("#SpentDate").text(spentDate);
+        $("#deleteExpenseModalButton").attr("href", "@Url.Action("DeleteExpense", "Expense")" + "/" + expenseId);
+    });
+</script>

@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "_budgetLayout";
+    ViewBag.Title = "Summary";
+    ViewBag.AccountName = Model.AccountName;
+    ViewBag.AccountImage = Model.AccountImage;
+}
+@model sstocker.budget.ViewModels.SummaryModel
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script src="~/vendor/jquery-ui/external/jquery/jquery.js"></script>
+    <script src="~/js/main.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#TimePeriod").change(function () {
+                var value = $("#TimePeriod").val();
+                window.location.href = '@Url.Action("Summary", "Expense")?TimePeriod=' + value;
+            })
+        });
+    </script>
+</head>
+<body>
+
+    <h2>Summary</h2>
+    <hr />
+    <label>Time Period: </label>
+    @Html.DropDownListFor(m => m.TimePeriod, Model.GetTimePeriodSelectList())
+    <br /><br />
+    @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()
+    <hr />
+</body>
+</html>

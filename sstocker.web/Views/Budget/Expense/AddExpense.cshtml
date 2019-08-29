@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "_budgetLayout";
+    ViewBag.Title = "Add Expense";
+    ViewBag.AccountName = Model.AccountName;
+    ViewBag.AccountImage = Model.AccountImage;
+}
+
+@model sstocker.budget.ViewModels.AddExpenseModel
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            Add Expense
+        </h6>
+    </div>
+    <div>
+    </div>
+    <div class="card-body">
+        <div class="form-row">
+            <input id="StoreInput" list="StoreList" style="width: 100%;" class="form-control form-control-user" placeholder="Enter Store...">
+            <datalist id="StoreList">
+                @for (int x = 0; x < Model.Stores.Count; x++)
+                {
+                    <option value="@Model.Stores[x]" />
+                }
+            </datalist>
+        </div>
+
+        <br />
+
+        <div class="form-row">
+            @Html.DropDownList("CategoryInput", new SelectList(Model.Categories), "Select Category...", new { @class = "form-control" })
+        </div>
+
+        <br />
+
+        <div class="form-row">
+            <div class="input-group hide-inputbtn">
+                <input placeholder="Enter Amount..." id="AmountInput" type="number" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control form-control-user currency" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="form-row">
+            <input id="DateInput" type="date" style="width: 100%;" class="form-control form-control-user">
+        </div>
+
+        @if (Model.HasSharedAccount)
+        {
+            <br />
+            <div class="form-row">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="SharedExpenseInput">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="SharedExpenseInput_Shared" autocomplete="off"> Shared Expense
+                    </label>
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="SharedExpenseInput_Personal" autocomplete="off" checked> Personal Expense
+                    </label>
+                </div>
+            </div>
+        }
+
+        <br />
+        <span class="btn btn-primary" style="width: 100%" onclick="SaveExpense()">Save</span>
+        <br />
+        <br />
+        <span class="btn btn-secondary" style="width: 100%" onclick="window.location.href='@Url.Action("Index", "Home")';">Cancel</span>
+    </div>
+</div>
+
+<script>
+        $(document).ready(function () {
+            //Set default date to today
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById("DateInput").value = today;
+        });
+
+        function SaveExpense() {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: '@Url.Action("SaveExpense", "Expense")',
+                    data: {
+                        store: $('#StoreInput').val(),
+                        category: $('#CategoryInput').val(),
+                        amount: $('#AmountInput').val(),
+                        date: $('#DateInput').val(),
+                        sharedExpense: $('#SharedExpenseInput_Shared').is(':checked')
+                    },
+                    error: function () {
+                        alert("There is a Problem, Try Again!");
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        if (result.status == true) {
+                            window.location.href = '@Url.Action("ExpenseSummary", "Expense")';
+                        }
+                        else {
+                            alert(result.message);
+                        }
+                    }
+                });
+        }
+</script>
