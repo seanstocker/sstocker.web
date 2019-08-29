@@ -18,13 +18,13 @@
     @if (Model.Shared.SharedDashboard)
     {
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h5><a href="@Url.Action("Index", "Home")">Go to Personal Dashboard</a></h5>
+            <h5><a href="@Url.Action("Dashboard", "Home")">Go to Personal Dashboard</a></h5>
         </div>
     }
     else
     {
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h5><a href="@Url.Action("Index", "Home", new { shared = true })">Go to Shared Dashboard</a></h5>
+            <h5><a href="@Url.Action("Dashboard", "Home", new { shared = true })">Go to Shared Dashboard</a></h5>
         </div>
     }
 }

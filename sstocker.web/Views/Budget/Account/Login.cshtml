@@ -97,7 +97,7 @@
                 success: function (result) {
                     console.log(result);
                     if (result.status == true) {
-                        window.location.href = '@Url.Action("Index", "Home")';
+                        window.location.href = '@Url.Action("Dashboard", "Home")';
                     }
                     else {
                         alert(result.message);

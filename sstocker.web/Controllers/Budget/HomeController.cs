@@ -14,7 +14,7 @@ namespace sstocker.web.Controllers
     [Route(SettingsHelper.ControllerRoute)]
     public class HomeController : Controller
     {
-        public IActionResult Index(bool shared)
+        public IActionResult Dashboard(bool shared)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default(long))
@@ -25,14 +25,14 @@ namespace sstocker.web.Controllers
                 var sharedAccountId = AccountHelper.GetSharedAccountId(accountId);
                 var model = GetDashboardModel(accountId, sharedAccountId, true);
                 model.SetBaseViewModel(accountId);
-                return View(SettingsHelper.GetHomeControllerViewPath(), model);
+                return View(SettingsHelper.GetHomeControllerViewPath("Dashboard"), model);
             }
             else
             {
                 var sharedAccountId = AccountHelper.HasSharedAccount(accountId) ? (long?)AccountHelper.GetSharedAccountId(accountId) : null;
                 var model = GetDashboardModel(accountId, sharedAccountId, false);
                 model.SetBaseViewModel(accountId);
-                return View(SettingsHelper.GetHomeControllerViewPath(), model);
+                return View(SettingsHelper.GetHomeControllerViewPath("Dashboard"), model);
             }
         }
 

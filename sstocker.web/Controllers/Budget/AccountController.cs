@@ -73,7 +73,7 @@ namespace sstocker.web.Controllers
         public ActionResult Logout()
         {
             HttpContext.Session.Set(SessionHelper.SessionKeyAccountId, 0);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Dashboard", "Home");
         }
 
         public ActionResult GetName(string username)
