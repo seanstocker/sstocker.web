@@ -1,6 +1,283 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-<label><a href="@Url.Action("Dashboard", "Home")">Go to Budget</a></label>
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Resume</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/vendor/resume/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet">
+    <link href="~/vendor/resume/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="~/vendor/resume/css/resume.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">
+            <span class="d-block d-lg-none">Sean Stocker</span>
+            <span class="d-none d-lg-block">
+                <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="~/vendor/resume/img/profile.jpg" alt="">
+            </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#experience">Experience</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#education">Education</a>
+                </li>
+                @*<li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#skills">Skills</a>
+                </li>*@
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#interests">Interests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#projects">Projects</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid p-0">
+
+        <section class="resume-section p-3 p-lg-5 d-flex align-items-center" id="about">
+            <div class="w-100">
+                <h1 class="mb-0">
+                    Sean
+                    <span class="text-primary">Stocker</span>
+                </h1>
+                <div class="subheading mb-5">
+                    (214) 535-2214 · <a href="mailto:seanstocker@gmail.com">seanstocker@gmail.com</a>
+                </div>
+                <p class="lead mb-5">I am a .NET C# software engineer that specializes in back-end APIs and PDF manipulation that also has experience in front-end work using MVC. I am also fluent in both English and Japanese.</p>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/sean-stocker-7b1427b2/">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://github.com/seanstocker">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    @*<a href="https://www.facebook.com/stocker.sean">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>*@
+                </div>
+            </div>
+        </section>
+
+        <hr class="m-0">
+
+        <section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="experience">
+            <div class="w-100">
+                <h2 class="mb-5">Experience</h2>
+
+                <div class="resume-item d-flex flex-column flex-md-row justify-content-between mb-5">
+                    <div class="resume-content">
+                        <h3 class="mb-0">Junior Software Engineer</h3>
+                        <div class="subheading mb-3">Physmodo</div>
+                        <p>
+                            Started working as an intern at this startup company, and became a junior developer in December of 2014.<br/>
+                            Worked on:
+                            <ul>
+                                <li>Using Microsoft’s Kinect to create range of motion and function movement system software to help physical therapist and sports scientists</li>
+                                <li>Learned to become a Microsoft full stack developer getting experience in desktop applications, website design, and database systems.</li>
+                                <li>Worked with Microsoft Azure to store and retrieve long term data for both individual and organization use</li>
+                                <li>Used ASP .Net SignalR to update real time between all users on the web and desktop applications</li>
+                                <li>Worked as part of a development team creating a product from ground up</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="resume-date text-md-right">
+                        <span class="text-primary">July 2014 - July 2015</span>
+                    </div>
+                </div>
+
+                <div class="resume-item d-flex flex-column flex-md-row justify-content-between">
+                    <div class="resume-content">
+                        <h3 class="mb-0">Software Engineer Intern</h3>
+                        <div class="subheading mb-3">GDSX</div>
+                        <p>Helped head programmer improve existing program. Gained workplace experience while shadowing.</p>
+                    </div>
+                    <div class="resume-date text-md-right">
+                        <span class="text-primary">June 2011 - August 2011</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <hr class="m-0">
+
+        <section class="resume-section p-3 p-lg-5 d-flex align-items-center" id="education">
+            <div class="w-100">
+                <h2 class="mb-5">Education</h2>
+
+                <div class="resume-item d-flex flex-column flex-md-row justify-content-between mb-5">
+                    <div class="resume-content">
+                        <h3 class="mb-0">University of Texas at Dallas</h3>
+                        <div class="subheading mb-3">Bachelor of Science</div>
+                        <div>Computer Science</div>
+                        <p>GPA: 3.188</p>
+                    </div>
+                    <div class="resume-date text-md-right">
+                        <span class="text-primary">August 2011 - May 2015</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <hr class="m-0">
+
+        @*<section class="resume-section p-3 p-lg-5 d-flex align-items-center" id="skills">
+            <div class="w-100">
+                <h2 class="mb-5">Skills</h2>
+
+                <div class="subheading mb-3">Programming Languages &amp; Tools</div>
+                <ul class="list-inline dev-icons">
+                    <li class="list-inline-item">
+                        <i class="fab fa-html5"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-css3-alt"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-js-square"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-angular"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-react"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-node-js"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-sass"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-less"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-wordpress"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-gulp"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-grunt"></i>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fab fa-npm"></i>
+                    </li>
+                </ul>
+
+                <div class="subheading mb-3">Workflow</div>
+                <ul class="fa-ul mb-0">
+                    <li>
+                        <i class="fa-li fa fa-check"></i>
+                        Mobile-First, Responsive Design
+                    </li>
+                    <li>
+                        <i class="fa-li fa fa-check"></i>
+                        Cross Browser Testing &amp; Debugging
+                    </li>
+                    <li>
+                        <i class="fa-li fa fa-check"></i>
+                        Cross Functional Teams
+                    </li>
+                    <li>
+                        <i class="fa-li fa fa-check"></i>
+                        Agile Development &amp; Scrum
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <hr class="m-0">*@
+
+        <section class="resume-section p-3 p-lg-5 d-flex align-items-center" id="interests">
+            <div class="w-100">
+                <h2 class="mb-5">Interests</h2>
+                <p>When outside of work, I like to go dancing. My favorite is swing dancing, which I learned 4 years ago. Since then, I have also learned salsa and tango.</p>
+                <p class="mb-0">In addition to dance, I am an avid board game collector. My collection is ever-growing with over 30 games at the moment. I enjoy spending time with my friends breaking out any number of these games.</p>
+            </div>
+        </section>
+
+        <hr class="m-0">
+
+        <section class="resume-section p-3 p-lg-5 d-flex align-items-center" id="projects">
+            <div class="w-100">
+                <h2 class="mb-5">Personal Projects</h2>
+
+                <div class="resume-item d-flex flex-column flex-md-row justify-content-between">
+                    <div class="resume-content">
+                        <h3 class="mb-0">Personal Budgeting Website</h3>
+                        <div class="subheading mb-3"><a href="http://budget.seanstocker.com">budget.seanstocker.com</a></div>
+                        <p>I have created my budgeting website as nothing that already existed had all the features that I liked.</p>
+                        <p>I took this on as a personal project to help my front-end web development skills as I have always been stronger at back-end work. This website was build in .NET Core C# using MVC and bootstrap.</p>
+                        <p>Please take a look at it using the provided sample login.</p>
+                    </div>
+                    <div class="resume-date">
+                        <table align="right">
+                            <colgroup>
+                                <col />
+                                <col width="10" />
+                                <col />
+                            </colgroup>
+                            <tr>
+                                <td colspan="3"><div class="text-primary">Sample Login:</div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="text-secondary">Username:</div></td>
+                                <td></td>
+                                <td><div>demo</div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="text-secondary">Password:</div></td>
+                                <td></td>
+                                <td><div>password</div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="~/vendor/resume/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/resume/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="~/vendor/resume/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="~/vendor/resume/js/resume.min.js"></script>
+
+</body>
+
+</html>
