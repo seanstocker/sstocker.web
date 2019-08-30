@@ -81,7 +81,7 @@
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Account Settings:</h6>
-                        <a class="collapse-item" href="@Url.Action("Profile", "Account")">Profile</a>
+                        @*<a class="collapse-item" href="@Url.Action("Profile", "Account")">Profile</a>*@
                         <a class="collapse-item" href="@Url.Action("Settings", "Account")">Settings</a>
                         <a class="collapse-item" href="@Url.Action("Logout", "Account")" data-toggle="modal" data-target="#logoutModal">Logout</a>
                     </div>
@@ -118,8 +118,11 @@
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    @*<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
+                    </button>*@
+                    <button class="btn btn-link d-md-none rounded-circle mr-3" onclick="location.href='@Url.Action("Dashboard", "Home")'">
+                        <i class="fas fa-coins"></i>
                     </button>
 
                     <!-- Topbar Navbar -->
@@ -135,10 +138,10 @@
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="@Url.Action("Profile", "Account")">
+                                @*<a class="dropdown-item" href="@Url.Action("Profile", "Account")">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
-                                </a>
+                                </a>*@
                                 <a class="dropdown-item" href="@Url.Action("Settings", "Account")">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
