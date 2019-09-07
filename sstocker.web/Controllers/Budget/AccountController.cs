@@ -7,6 +7,7 @@ using sstocker.budget.ViewModels;
 using sstocker.core.Helpers;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace sstocker.web.Controllers
 {
@@ -48,6 +49,18 @@ namespace sstocker.web.Controllers
             }
         }
 
+        public IActionResult Profile()
+        {
+            var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
+            if (accountId == default(long))
+                return RedirectToAction("Login", "Account");
+
+            var model = new ProfileViewModel(accountId);
+            model.SetBaseViewModel(accountId);
+
+            return View(SettingsHelper.GetAccountControllerViewPath("Profile"), model);
+        }
+
         public ActionResult Validate(string username, string password)
         {
             var account = AccountRepository.GetAccountWithPassword(username);
@@ -78,12 +91,12 @@ namespace sstocker.web.Controllers
 
         public ActionResult GetName(string username)
         {
-            var account = AccountRepository.GetAccount(username);
+            var account = AccountRepository.GetAccount(username, true);
 
             if (account != null && account != default(Account) && !string.IsNullOrWhiteSpace(account.Name))
-                return Json(new { status = true, name = account.Name });
+                return Json(new { name = account.Name, image = account.Image });
             else
-                return Json(new { status = false });
+                return Json(new { name = "John Doe", image = AccountHelper.GetImage() });
         }
 
         public ActionResult CreateAccount(string username, string password, string name)
@@ -137,6 +150,29 @@ namespace sstocker.web.Controllers
             }
 
             return Json(new { status = true, message = "Settings Saved" });
+        }
+
+        public ActionResult DeleteProfileImage()
+        {
+            var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
+            if (accountId == default(long))
+                return RedirectToAction("Login", "Account");
+
+            AccountRepository.DeleteAccountImage(accountId);
+
+            return Json(new { status = true });
+        }
+
+        public ActionResult UpdateProfileImage(string image)
+        {
+            var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
+            if (accountId == default(long))
+                return RedirectToAction("Login", "Account");
+
+            if (!string.IsNullOrWhiteSpace(image))
+                AccountRepository.UpdateAccountImage(accountId, Regex.Replace(image, @"data:image\/.*?;base64,", ""));
+
+            return Json(new { status = true });
         }
     }
 }

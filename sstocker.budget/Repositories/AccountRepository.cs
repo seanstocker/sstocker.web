@@ -24,9 +24,16 @@ WHERE Username = @Username";
             return result;
         }
 
-        public static Account GetAccount(string username)
+        public static Account GetAccount(string username, bool getImage = false)
         {
-            var sql = @"
+            var sql = getImage
+                ? @"
+SELECT a.*, ai.Image
+FROM Budget.dbo.Account a
+	LEFT JOIN Budget.dbo.AccountImage ai
+		ON a.AccountId = ai.AccountId
+WHERE a.Username = @Username"
+                : @"
 SELECT *
 FROM Budget.dbo.Account
 WHERE Username = @Username";
@@ -40,9 +47,16 @@ WHERE Username = @Username";
             return result;
         }
 
-        public static Account GetAccount(long accountId)
+        public static Account GetAccount(long accountId, bool getImage = false)
         {
-            var sql = @"
+            var sql = getImage
+                ? @"
+SELECT a.*, ai.Image
+FROM Budget.dbo.Account a
+	LEFT JOIN Budget.dbo.AccountImage ai
+		ON a.AccountId = ai.AccountId
+WHERE a.AccountId = @AccountId"
+                : @"
 SELECT *
 FROM Budget.dbo.Account
 WHERE AccountId = @AccountId";
@@ -165,6 +179,53 @@ WHERE s.AccountId = @AccountId";
 
             var result = DatabaseHelper.QueryFirstOrDefault<string>(sql, p);
             return result;
+        }
+
+        public static void DeleteAccountImage(long accountId)
+        {
+            var sql = @"
+DELETE FROM Budget.dbo.AccountImage
+WHERE AccountId = @AccountId";
+
+            var p = new
+            {
+                AccountId = accountId
+            };
+
+            DatabaseHelper.Execute(sql, p);
+        }
+
+        public static void UpdateAccountImage(long accountId, string accountImage)
+        {
+            var sql = @"
+IF EXISTS (SELECT * FROM Budget.dbo.AccountImage WHERE AccountId = @AccountId)
+BEGIN
+
+	UPDATE Budget.dbo.AccountImage
+	SET Image = @AccountImage
+	WHERE AccountId = @AccountId
+
+END
+ELSE
+BEGIN
+
+	INSERT INTO Budget.dbo.AccountImage
+	VALUES (@AccountId, @AccountImage)
+
+END";
+
+            var p = new
+            {
+                AccountId = accountId,
+                AccountImage = accountImage
+            };
+
+            DatabaseHelper.Execute(sql, p);
+        }
+
+        public static void UpdateAccountImage(long accountId, object image)
+        {
+            throw new NotImplementedException();
         }
     }
 }

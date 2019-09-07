@@ -33,7 +33,7 @@
             <div class="wrap-login100 p-t-50 p-b-0">
                 <form class="login100-form validate-form">
                     <div class="login100-form-avatar">
-                        <img src="~/images/avatar-01.jpg" alt="AVATAR">
+                        <img id="userImage" src="~/images/avatar-01.jpg" alt="AVATAR">
                     </div>
                     <span class="login100-form-title p-t-20 p-b-45">
                         <label name="name" id="name">John Doe</label>
@@ -115,12 +115,8 @@
                     username: $('#username').val()
                 },
                 success: function (result) {
-                    if (result.status == true) {
-                        document.getElementById('name').innerHTML = result.name;
-                    }
-                    else {
-                        document.getElementById('name').innerHTML = "John Doe";
-                    }
+                    document.getElementById('name').innerHTML = result.name;
+                    document.getElementById('userImage').src = result.image;
                 }
             });
         }

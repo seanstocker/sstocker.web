@@ -181,11 +181,7 @@
                 <div class="card-body">
                     @for (int x = 0; x < Model.Shared.OweAmount.Count; x++)
                     {
-                        @if (Model.Shared.OweAmount[x].OweAmount == 0)
-                        {
-                            <p>Neither of you owe anything to each other for the month of @Model.Shared.OweAmount[x].Month.ToString("MMMM yyyy")</p>
-                        }
-                        else if (Model.Shared.OweAmount[x].OweAmount > 0)
+                        if (Model.Shared.OweAmount[x].OweAmount > 0)
                         {
                             <p>You owe @Model.Shared.PartnerName $@Math.Abs(Model.Shared.OweAmount[x].OweAmount) for the month of @Model.Shared.OweAmount[x].Month.ToString("MMMM yyyy")</p>
                         }

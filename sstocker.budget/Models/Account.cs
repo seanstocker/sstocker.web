@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sstocker.budget.Helpers;
+using System;
 
 namespace sstocker.budget.Models
 {
@@ -7,8 +8,16 @@ namespace sstocker.budget.Models
         public long AccountId;
         public string Username;
         public string Name;
-        public string Image;
         public DateTime CreateDateUTC;
+
+        private string _image;
+
+        public string Image { get { return AccountHelper.GetImage(_image); } set { _image = value; } }
+
+        public bool IsDefaultImage()
+        {
+            return string.IsNullOrWhiteSpace(_image);
+        }
     }
 
     public class AccountWithPassword : Account
