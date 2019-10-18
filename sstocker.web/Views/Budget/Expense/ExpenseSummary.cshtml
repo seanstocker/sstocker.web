@@ -132,6 +132,6 @@
         $("#Amount").text(amount);
         $("#Category").text(category);
         $("#SpentDate").text(spentDate);
-        $("#deleteExpenseModalButton").attr("href", "@Url.Action("DeleteExpense", "Expense")" + "/" + expenseId);
+        $("#deleteExpenseModalButton").attr("href", "@Url.Action("DeleteExpense", "Expense")" + "?id=" + expenseId);
     });
 </script>
