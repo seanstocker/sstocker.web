@@ -8,13 +8,13 @@ namespace sstocker.budget.Helpers
 
         public static bool HasSharedAccount(long accountId)
         {
-            var sharedAccount = AccountRepository.GetSharedAccount(accountId);
+            var sharedAccount = SharedAccountRepository.GetSharedAccount(accountId);
             return sharedAccount != null;
         }
 
         public static long GetSharedAccountId(long accountId)
         {
-            var sharedAccount = AccountRepository.GetSharedAccount(accountId);
+            var sharedAccount = SharedAccountRepository.GetSharedAccount(accountId);
             return sharedAccount.AccountId;
         }
 

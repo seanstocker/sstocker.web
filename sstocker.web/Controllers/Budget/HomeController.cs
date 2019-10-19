@@ -36,6 +36,35 @@ namespace sstocker.web.Controllers
             }
         }
 
+        public IActionResult AddTransfer(string amount, string date)
+        {
+            var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
+            if (accountId == default(long))
+                return RedirectToAction("Login", "Account");
+
+            decimal amountValue;
+            DateTime dateValue;
+
+            if (string.IsNullOrWhiteSpace(amount))
+                return Json(new { status = false, message = "Amount is required" });
+            if (!decimal.TryParse(amount, out amountValue))
+                return Json(new { status = false, message = "Amount is required" });
+            if (string.IsNullOrWhiteSpace(date))
+                return Json(new { status = false, message = "Date is required" });
+            if (!DateTime.TryParse(date, out dateValue))
+                return Json(new { status = false, message = "Date is required" });
+            try
+            {
+                TransferHelper.TransferMoney(accountId, amountValue, dateValue);
+            }
+            catch (Exception)
+            {
+                return Json(new { status = false, message = "Could not transfer money" });
+            }
+
+            return Json(new { status = true, message = "Transfer Added" });
+        }
+
         private DashboardModel GetDashboardModel(long accountId, long? sharedAccountId, bool sharedDashboard)
         {
             var model = new DashboardModel();
@@ -174,24 +203,45 @@ namespace sstocker.web.Controllers
         public SharedDashboardModel GetSharedDashboardModel(long accountId, long? sharedAccountId, bool sharedDashboard)
         {
             var hasSharedAccount = sharedAccountId != null;
-            var partnerName = !sharedDashboard && hasSharedAccount ? AccountRepository.GetPartnerName(accountId) : null;
+            var partnerName = !sharedDashboard && hasSharedAccount ? SharedAccountRepository.GetPartnerName(accountId) : null;
             var model = new SharedDashboardModel(hasSharedAccount, sharedDashboard, partnerName);
 
             if (!sharedDashboard && hasSharedAccount)
             {
-                var thisMonth = ExpenseSummaryTimePeriodHelper.GetStartDate(ExpenseSummaryTimePeriod.ThisMonth);
-                var lastMonth = ExpenseSummaryTimePeriodHelper.GetStartDate(ExpenseSummaryTimePeriod.LastMonth);
-                model.AddSharedOweAmount(GetOweAmount(accountId, sharedAccountId.GetValueOrDefault(), thisMonth), thisMonth);
-                model.AddSharedOweAmount(GetOweAmount(accountId, sharedAccountId.GetValueOrDefault(), lastMonth), lastMonth);
+                var owedAmounts = GetOweAmount(accountId, sharedAccountId.GetValueOrDefault());
+
+                foreach (var owedAmount in owedAmounts)
+                    model.AddSharedOweAmount(owedAmount.Item2, owedAmount.Item1);
             }
 
             return model;
+        }
+
+        private List<Tuple<DateTime, decimal>> GetOweAmount(long accountId, long sharedAccountId)
+        {
+            var owedAmount = new List<Tuple<DateTime, decimal>>();
+
+            var expenses = ExpenseRepository.GetAccountExpenses(sharedAccountId);
+            var months = expenses.OrderBy(e => e.SpentDate).Select(e => new DateTime(e.SpentDate.Year, e.SpentDate.Month, 1)).Distinct();
+
+            foreach (var month in months)
+            {
+                var amount = GetOweAmount(accountId, sharedAccountId, month);
+
+                if (amount != 0)
+                    owedAmount.Add(new Tuple<DateTime, decimal>(month, amount));
+            }
+
+            return owedAmount;
         }
 
         private decimal GetOweAmount(long accountId, long sharedAccountId, DateTime month)
         {
             var expenses = ExpenseRepository.GetAccountExpenses(sharedAccountId);
             expenses = expenses.Where(e => e.SpentDate.Year == month.Year && e.SpentDate.Month == month.Month).ToList();
+
+            var transfers = SharedAccountRepository.GetSharedAccountMoneyTransfer(sharedAccountId);
+            transfers = transfers.Where(t => t.ForYear == month.Year && t.ForMonth == month.Month).ToList();
 
             var yourIncomeTotal = IncomeRepository.GetAccountIncome(accountId).Where(i => i.IncomeDate.Year == month.Year && i.IncomeDate.Month == month.Month).Sum(i => i.Amount);
             var partnerIncomeTotal = IncomeRepository.GetPartnerIncome(accountId).Where(i => i.IncomeDate.Year == month.Year && i.IncomeDate.Month == month.Month).Sum(i => i.Amount);
@@ -201,7 +251,13 @@ namespace sstocker.web.Controllers
             var yourSharedSpentTotal = expenses.Where(e => e.SpentAccountId == accountId).Sum(e => e.Amount);
             var yourIdealSpentTotal = yourPercentage * sharedSpentTotal;
 
-            return Math.Round(yourIdealSpentTotal - yourSharedSpentTotal, 2);
+            var youPayed = transfers.Where(t => t.PayerAccountId == accountId).Sum(t => t.Amount);
+            var youRecieved = transfers.Where(t => t.PayedAccountId == accountId).Sum(t => t.Amount);
+
+            var finalAmount = Math.Round(yourIdealSpentTotal - yourSharedSpentTotal, 2);
+            finalAmount = finalAmount - youPayed + youRecieved;
+
+            return finalAmount;
         }
     }
 }

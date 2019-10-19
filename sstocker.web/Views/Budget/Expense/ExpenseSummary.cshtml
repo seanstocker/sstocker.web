@@ -23,7 +23,7 @@
     <button class="btn btn-primary dropdown-toggle" style="width: 100%;" type="button" id="timePeriodDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="mr-2 d-none d-lg-inline">@Model.TimePeriod.ToString()</span>
     </button>
-    <div class="dropdown-menu animated--fade-in" style="width: 100%;" aria-labelledby="timePeriodDropdown" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
+    <div class="dropdown-menu animated--fade-in" aria-labelledby="timePeriodDropdown" x-placement="bottom-start" style="width: 100%; position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
         @foreach (int val in Enum.GetValues(typeof(sstocker.budget.Enums.ExpenseSummaryTimePeriod)))
         {
             var name = Enum.GetName(typeof(sstocker.budget.Enums.ExpenseSummaryTimePeriod), val);
@@ -87,7 +87,7 @@
 </div>
 
 
-<!-- Logout Modal-->
+<!-- Delete Modal-->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -106,7 +106,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" id="deleteExpenseModalButton" href="@Url.Action("Logout", "Account")">Delete</a>
+                <a class="btn btn-danger" id="deleteExpenseModalButton">Delete</a>
             </div>
         </div>
     </div>

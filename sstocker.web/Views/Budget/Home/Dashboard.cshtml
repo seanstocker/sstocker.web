@@ -187,7 +187,14 @@
                         }
                         else if (Model.Shared.OweAmount[x].OweAmount < 0)
                         {
-                            <p>@Model.Shared.PartnerName owes you $@Math.Abs(Model.Shared.OweAmount[x].OweAmount) for the month of @Model.Shared.OweAmount[x].Month.ToString("MMMM yyyy")</p>
+                            <p>
+
+                                <a href="" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal" data-target="#addTransferModal"
+                                   data-amount="@Math.Abs(Model.Shared.OweAmount[x].OweAmount)" data-fordate="@Model.Shared.OweAmount[x].Month.ToString("MMMM yyyy")" data-partnername="@Model.Shared.PartnerName">
+                                    <span class="text">Payed</span>
+                                </a>
+                                @Model.Shared.PartnerName owes you $@Math.Abs(Model.Shared.OweAmount[x].OweAmount) for the month of @Model.Shared.OweAmount[x].Month.ToString("MMMM yyyy")
+                            </p>
                         }
                     }
                 </div>
@@ -196,11 +203,71 @@
     </div>
 }
 
+
+
+<!-- Add Transfer Modal-->
+<div class="modal fade" id="addTransferModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Transfer</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Has <label id="PartnerName"></label> payed you <label id="Amount"></label> for the month of <label id="Month"></label>?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" type="button" id="addTransferModalModalButton">Yes</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 <script>
     $(document).ready(function () {
         createLineChart();
         createPieChart();
+    });
+
+    $('#addTransferModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var partnerName = button.data('partnername') // Extract info from data-* attributes
+        var amount = button.data('amount') // Extract info from data-* attributes
+        var fordate = button.data('fordate') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        $("#PartnerName").text(partnerName);
+        $("#Amount").text(amount);
+        $("#Month").text(fordate);
+        var button = document.getElementById("addTransferModalModalButton");
+        document.getElementById("addTransferModalModalButton").onclick = function () {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: '@Url.Action("AddTransfer", "Home")',
+                    data: {
+                        amount: amount,
+                        date: fordate
+                    },
+                    error: function () {
+                        alert("There is a Problem, Try Again!");
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        if (result.status == true) {
+                            window.location.href = '@Url.Action("Dashboard", "Home")';
+                        }
+                        else {
+                            alert(result.message);
+                        }
+                    }
+                });
+        }
     });
 
     function createLineChart() {

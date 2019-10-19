@@ -2,7 +2,6 @@
 using sstocker.budget.Models;
 using sstocker.core.Helpers;
 using System;
-using System.Linq;
 
 namespace sstocker.budget.Repositories
 {
@@ -136,49 +135,6 @@ END";
             };
 
             DatabaseHelper.Execute(sql, p);
-        }
-
-        public static Account GetSharedAccount(long accountId)
-        {
-            var accountSettings = GetAccountSettings<dynamic>(accountId, "ACCOUNTSHARINGACCOUNTID");
-            if (accountSettings.Settings.Any())
-            {
-                var sharedAccountSql = @"
-SELECT *
-FROM Budget.dbo.Account
-WHERE AccountId = @AccountId";
-
-                var sharedAccountParameters = new
-                {
-                    AccountId = accountSettings.Settings.FirstOrDefault().ContextValue
-                };
-
-                return DatabaseHelper.QueryFirstOrDefault<Account>(sharedAccountSql, sharedAccountParameters);
-            }
-            return null;
-        }
-
-        public static string GetPartnerName(long accountId)
-        {
-            var sql = @"
-SELECT a.Name
-FROM Budget.dbo.AccountSettings s
-	JOIN Budget.dbo.AccountSettings s2
-		ON s.AccountSettingsId != s2.AccountSettingsId
-			AND s.ContextKey = 'ACCOUNTSHARINGACCOUNTID'
-			AND s2.ContextKey = 'ACCOUNTSHARINGACCOUNTID'
-			AND s.ContextValue = s2.ContextValue
-	JOIN Budget.dbo.Account a
-		ON a.AccountId = s2.AccountId
-WHERE s.AccountId = @AccountId";
-
-            var p = new
-            {
-                AccountId = accountId
-            };
-
-            var result = DatabaseHelper.QueryFirstOrDefault<string>(sql, p);
-            return result;
         }
 
         public static void DeleteAccountImage(long accountId)
