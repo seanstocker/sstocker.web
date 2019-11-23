@@ -17,7 +17,7 @@ namespace sstocker.web.Controllers
         public IActionResult ExpenseSummary(ExpenseSummaryTimePeriod TimePeriod)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
             var model = GetExpenseSummary(accountId, TimePeriod);
@@ -28,7 +28,7 @@ namespace sstocker.web.Controllers
         public IActionResult SharedExpenseSummary(ExpenseSummaryTimePeriod TimePeriod)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
             var sharedAccountId = AccountHelper.GetSharedAccountId(accountId);
@@ -40,7 +40,7 @@ namespace sstocker.web.Controllers
         public IActionResult Summary(SummaryTimePeriod? TimePeriod)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
             var model = GetSummaryModel(accountId, TimePeriod ?? SummaryTimePeriod.Past30Days);
@@ -51,7 +51,7 @@ namespace sstocker.web.Controllers
         public IActionResult BudgetSummary()
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
             var model = GetBudgetSummaryModel(accountId);
@@ -62,7 +62,7 @@ namespace sstocker.web.Controllers
         public IActionResult AddExpense()
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
             var model = new AddExpenseModel(accountId);
@@ -73,7 +73,7 @@ namespace sstocker.web.Controllers
         public IActionResult EditExpense(Guid id)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
             var model = new EditExpenseModel(accountId, id);
@@ -84,10 +84,10 @@ namespace sstocker.web.Controllers
         public IActionResult DeleteExpense(Guid id)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
-            if (id == default(Guid) || id == Guid.Empty)
+            if (id == default || id == Guid.Empty)
                 return RedirectToAction("ExpenseSummary", "Expense");
 
             ExpenseRepository.DeleteExpense(id);
@@ -98,11 +98,9 @@ namespace sstocker.web.Controllers
         public ActionResult SaveExpense(string store, string category, string amount, string date, bool sharedExpense)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
-            decimal amountValue;
-            DateTime dateValue;
 
             if (string.IsNullOrWhiteSpace(store))
                 return Json(new { status = false, message = "Store is required" });
@@ -110,11 +108,11 @@ namespace sstocker.web.Controllers
                 return Json(new { status = false, message = "Category is required" });
             if (string.IsNullOrWhiteSpace(amount))
                 return Json(new { status = false, message = "Amount is required" });
-            if (!decimal.TryParse(amount, out amountValue))
+            if (!decimal.TryParse(amount, out decimal amountValue))
                 return Json(new { status = false, message = "Amount is required" });
             if (string.IsNullOrWhiteSpace(date))
                 return Json(new { status = false, message = "Date is required" });
-            if (!DateTime.TryParse(date, out dateValue))
+            if (!DateTime.TryParse(date, out DateTime dateValue))
                 return Json(new { status = false, message = "Date is required" });
 
             var storeId = StoreHelper.GetOrAddStoreId(store);
@@ -135,13 +133,11 @@ namespace sstocker.web.Controllers
         public ActionResult SaveEditExpense(Guid id, string store, string category, string amount, string date, bool sharedExpense)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
-            decimal amountValue;
-            DateTime dateValue;
 
-            if (id == default(Guid) || id == Guid.Empty)
+            if (id == default || id == Guid.Empty)
                 return Json(new { status = false, message = "ERROR: Please refresh the page." });
             if (string.IsNullOrWhiteSpace(store))
                 return Json(new { status = false, message = "Store is required" });
@@ -149,11 +145,11 @@ namespace sstocker.web.Controllers
                 return Json(new { status = false, message = "Category is required" });
             if (string.IsNullOrWhiteSpace(amount))
                 return Json(new { status = false, message = "Amount is required" });
-            if (!decimal.TryParse(amount, out amountValue))
+            if (!decimal.TryParse(amount, out decimal amountValue))
                 return Json(new { status = false, message = "Amount is required" });
             if (string.IsNullOrWhiteSpace(date))
                 return Json(new { status = false, message = "Date is required" });
-            if (!DateTime.TryParse(date, out dateValue))
+            if (!DateTime.TryParse(date, out DateTime dateValue))
                 return Json(new { status = false, message = "Date is required" });
 
             var storeId = StoreHelper.GetOrAddStoreId(store);

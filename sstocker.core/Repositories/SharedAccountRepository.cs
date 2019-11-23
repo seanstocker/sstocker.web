@@ -15,7 +15,7 @@ namespace sstocker.budget.Repositories
             {
                 var sharedAccountSql = @"
 SELECT *
-FROM Budget.dbo.Account
+FROM Account.dbo.Account
 WHERE AccountId = @AccountId";
 
                 var sharedAccountParameters = new
@@ -32,13 +32,13 @@ WHERE AccountId = @AccountId";
         {
             var sql = @"
 SELECT a.Name
-FROM Budget.dbo.AccountSettings s
-	JOIN Budget.dbo.AccountSettings s2
+FROM Account.dbo.AccountSettings s
+	JOIN Account.dbo.AccountSettings s2
 		ON s.AccountSettingsId != s2.AccountSettingsId
 			AND s.ContextKey = 'ACCOUNTSHARINGACCOUNTID'
 			AND s2.ContextKey = 'ACCOUNTSHARINGACCOUNTID'
 			AND s.ContextValue = s2.ContextValue
-	JOIN Budget.dbo.Account a
+	JOIN Account.dbo.Account a
 		ON a.AccountId = s2.AccountId
 WHERE s.AccountId = @AccountId";
 
@@ -99,17 +99,17 @@ FROM @SharedAccountMoneyTransferId";
             DatabaseHelper.Execute(sql, p);
         }
 
-        private static long GetPartnerAccountId(long accountId)
+        public static long GetPartnerAccountId(long accountId)
         {
             var sql = @"
 SELECT a.AccountId
-FROM Budget.dbo.AccountSettings s
-	JOIN Budget.dbo.AccountSettings s2
+FROM Account.dbo.AccountSettings s
+	JOIN Account.dbo.AccountSettings s2
 		ON s.AccountSettingsId != s2.AccountSettingsId
 			AND s.ContextKey = 'ACCOUNTSHARINGACCOUNTID'
 			AND s2.ContextKey = 'ACCOUNTSHARINGACCOUNTID'
 			AND s.ContextValue = s2.ContextValue
-	JOIN Budget.dbo.Account a
+	JOIN Account.dbo.Account a
 		ON a.AccountId = s2.AccountId
 WHERE s.AccountId = @AccountId";
 

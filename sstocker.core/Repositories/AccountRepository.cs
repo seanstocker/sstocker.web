@@ -11,7 +11,7 @@ namespace sstocker.budget.Repositories
         {
             var sql = @"
 SELECT *
-FROM Budget.dbo.Account
+FROM Account.dbo.Account
 WHERE Username = @Username";
 
             var p = new
@@ -28,13 +28,13 @@ WHERE Username = @Username";
             var sql = getImage
                 ? @"
 SELECT a.*, ai.Image
-FROM Budget.dbo.Account a
-	LEFT JOIN Budget.dbo.AccountImage ai
+FROM Account.dbo.Account a
+	LEFT JOIN Account.dbo.AccountImage ai
 		ON a.AccountId = ai.AccountId
 WHERE a.Username = @Username"
                 : @"
 SELECT *
-FROM Budget.dbo.Account
+FROM Account.dbo.Account
 WHERE Username = @Username";
 
             var p = new
@@ -51,13 +51,13 @@ WHERE Username = @Username";
             var sql = getImage
                 ? @"
 SELECT a.*, ai.Image
-FROM Budget.dbo.Account a
-	LEFT JOIN Budget.dbo.AccountImage ai
+FROM Account.dbo.Account a
+	LEFT JOIN Account.dbo.AccountImage ai
 		ON a.AccountId = ai.AccountId
 WHERE a.AccountId = @AccountId"
                 : @"
 SELECT *
-FROM Budget.dbo.Account
+FROM Account.dbo.Account
 WHERE AccountId = @AccountId";
 
             var p = new
@@ -72,7 +72,7 @@ WHERE AccountId = @AccountId";
         public static void CreateAccount(string username, string password, string salt, string name)
         {
             var sql = @"
-INSERT INTO Budget.dbo.Account
+INSERT INTO Account.dbo.Account
 VALUES (@Username, @Password, @Salt, @Name, @Date)";
 
             var p = new
@@ -91,7 +91,7 @@ VALUES (@Username, @Password, @Salt, @Name, @Date)";
         {
             var sql = @"
 SELECT s.ContextKey, s.ContextValue, s.Data
-FROM Budget.dbo.AccountSettings s
+FROM Account.dbo.AccountSettings s
 WHERE s.AccountId = @Id
     AND s.ContextKey = @Key";
 
@@ -108,10 +108,10 @@ WHERE s.AccountId = @Id
         public static void AddOrUpdateAccountSetting(long accountId, string contextKey, long contextValue, object data)
         {
             var sql = @"
-IF EXISTS (SELECT * FROM Budget.dbo.AccountSettings WHERE AccountId = @Id AND ContextKey = @ContextKey AND ContextValue = @ContextValue)
+IF EXISTS (SELECT * FROM Account.dbo.AccountSettings WHERE AccountId = @Id AND ContextKey = @ContextKey AND ContextValue = @ContextValue)
 BEGIN
 
-UPDATE Budget.dbo.AccountSettings
+UPDATE Account.dbo.AccountSettings
 SET Data = @Data
 WHERE AccountId = @Id
 	AND ContextKey = @ContextKey
@@ -121,7 +121,7 @@ END
 ELSE
 BEGIN
 
-INSERT INTO Budget.dbo.AccountSettings
+INSERT INTO Account.dbo.AccountSettings
 VALUES (@Id, @ContextKey, @ContextValue, @Data)
 
 END";
@@ -140,7 +140,7 @@ END";
         public static void DeleteAccountImage(long accountId)
         {
             var sql = @"
-DELETE FROM Budget.dbo.AccountImage
+DELETE FROM Account.dbo.AccountImage
 WHERE AccountId = @AccountId";
 
             var p = new
@@ -154,10 +154,10 @@ WHERE AccountId = @AccountId";
         public static void UpdateAccountImage(long accountId, string accountImage)
         {
             var sql = @"
-IF EXISTS (SELECT * FROM Budget.dbo.AccountImage WHERE AccountId = @AccountId)
+IF EXISTS (SELECT * FROM Account.dbo.AccountImage WHERE AccountId = @AccountId)
 BEGIN
 
-	UPDATE Budget.dbo.AccountImage
+	UPDATE Account.dbo.AccountImage
 	SET Image = @AccountImage
 	WHERE AccountId = @AccountId
 
@@ -165,7 +165,7 @@ END
 ELSE
 BEGIN
 
-	INSERT INTO Budget.dbo.AccountImage
+	INSERT INTO Account.dbo.AccountImage
 	VALUES (@AccountId, @AccountImage)
 
 END";

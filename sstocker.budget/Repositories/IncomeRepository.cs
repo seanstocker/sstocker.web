@@ -32,19 +32,9 @@ WHERE i.AccountId = @AccountId";
 
         public static List<Income> GetPartnerIncome(long accountId)
         {
-            var sql = @"
-;DECLARE @PartnerAccountId INT = (
-SELECT a.AccountId
-FROM Budget.dbo.AccountSettings s
-	JOIN Budget.dbo.AccountSettings s2
-		ON s.AccountSettingsId != s2.AccountSettingsId
-			AND s.ContextKey = 'ACCOUNTSHARINGACCOUNTID'
-			AND s2.ContextKey = 'ACCOUNTSHARINGACCOUNTID'
-			AND s.ContextValue = s2.ContextValue
-	JOIN Budget.dbo.Account a
-		ON a.AccountId = s2.AccountId
-WHERE s.AccountId = @AccountId)
+            var partnerAccountId = SharedAccountRepository.GetPartnerAccountId(accountId);
 
+            var sql = @"
 SELECT i.IncomeId, i.AccountId, s.Name Source, t.Name Type, i.Amount, i.IncomeDate, eg.ExternalGuid
 FROM Budget.dbo.Income i
 	JOIN Budget.dbo.IncomeSource s
@@ -58,7 +48,7 @@ WHERE i.AccountId = @PartnerAccountId";
 
             var p = new
             {
-                AccountId = accountId
+                PartnerAccountId = partnerAccountId
             };
 
             var result = DatabaseHelper.Query<Income>(sql, p);

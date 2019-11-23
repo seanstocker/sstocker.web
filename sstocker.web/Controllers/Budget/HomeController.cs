@@ -17,7 +17,7 @@ namespace sstocker.web.Controllers
         public IActionResult Dashboard(bool shared)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
 
             if (shared)
@@ -39,19 +39,16 @@ namespace sstocker.web.Controllers
         public IActionResult AddTransfer(string amount, string date)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
+            if (accountId == default)
                 return RedirectToAction("Login", "Account");
-
-            decimal amountValue;
-            DateTime dateValue;
 
             if (string.IsNullOrWhiteSpace(amount))
                 return Json(new { status = false, message = "Amount is required" });
-            if (!decimal.TryParse(amount, out amountValue))
+            if (!decimal.TryParse(amount, out decimal amountValue))
                 return Json(new { status = false, message = "Amount is required" });
             if (string.IsNullOrWhiteSpace(date))
                 return Json(new { status = false, message = "Date is required" });
-            if (!DateTime.TryParse(date, out dateValue))
+            if (!DateTime.TryParse(date, out DateTime dateValue))
                 return Json(new { status = false, message = "Date is required" });
             try
             {
