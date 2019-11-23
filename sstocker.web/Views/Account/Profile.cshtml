@@ -1,11 +1,11 @@
 ﻿@{
-    Layout = "_budgetLayout";
+    Layout = Model.Layout;
     ViewBag.Title = "Profile";
     ViewBag.AccountName = Model.AccountName;
     ViewBag.AccountImage = Model.AccountImage;
 }
 
-@model sstocker.budget.ViewModels.ProfileViewModel
+@model sstocker.core.ViewModels.ProfileViewModel
 
 <html>
 <body>
@@ -92,7 +92,7 @@
             $.ajax(
                 {
                     type: "POST",
-                    url: '@Url.Action("DeleteProfileImage", "Account")',
+                    url: '@Url.Action("DeleteProfileImage", "Account", new { id = Model.Site })',
                     data: {
                     },
                     error: function (result) {
@@ -118,6 +118,7 @@
                         type: "POST",
                         url: '@Url.Action("UpdateProfileImage", "Account")',
                         data: {
+                            id: '@Model.Site',
                             image: reader.result
                         },
                         error: function (result) {

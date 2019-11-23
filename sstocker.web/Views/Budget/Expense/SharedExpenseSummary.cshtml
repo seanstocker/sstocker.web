@@ -100,7 +100,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" id="deleteExpenseModalButton" href="@Url.Action("Logout", "Account")">Delete</a>
+                <a class="btn btn-danger" id="deleteExpenseModalButton" href="@Url.Action("Logout", "Account", new { id = sstocker.core.Helpers.LoginHelper.BudgetApp })">Delete</a>
             </div>
         </div>
     </div>

@@ -13,7 +13,7 @@ using System.Linq;
 namespace sstocker.web.Controllers
 {
     [Route(SettingsHelper.ControllerRoute)]
-    public class HomeController : Controller
+    public class BudgetHomeController : Controller
     {
         public IActionResult Dashboard(bool shared)
         {
@@ -26,14 +26,14 @@ namespace sstocker.web.Controllers
                 var sharedAccountId = AccountHelper.GetSharedAccountId(accountId);
                 var model = GetDashboardModel(accountId, sharedAccountId, true);
                 model.SetBaseViewModel(accountId);
-                return View(SettingsHelper.GetHomeControllerViewPath("Dashboard"), model);
+                return View(SettingsHelper.GetBudgetHomeControllerViewPath("Dashboard"), model);
             }
             else
             {
                 var sharedAccountId = AccountHelper.HasSharedAccount(accountId) ? (long?)AccountHelper.GetSharedAccountId(accountId) : null;
                 var model = GetDashboardModel(accountId, sharedAccountId, false);
                 model.SetBaseViewModel(accountId);
-                return View(SettingsHelper.GetHomeControllerViewPath("Dashboard"), model);
+                return View(SettingsHelper.GetBudgetHomeControllerViewPath("Dashboard"), model);
             }
         }
 

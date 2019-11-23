@@ -14,7 +14,11 @@ namespace sstocker.core.ViewModels
             {
                 case LoginHelper.BudgetApp:
                     ActionName = "Dashboard";
-                    ControllerName = "Home";
+                    ControllerName = "BudgetHome";
+                    break;
+                case LoginHelper.WishlistApp:
+                    ActionName = "Dashboard";
+                    ControllerName = "WishlistHome";
                     break;
                 default:
                     throw new Exception($"{site} is not a valid site.");

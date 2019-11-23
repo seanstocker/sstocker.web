@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using sstocker.budget.ViewModels;
 using sstocker.core.Helpers;
 using sstocker.core.Models;
 using sstocker.core.Repositories;
 using sstocker.core.ViewModels;
+using System;
 using System.Text.RegularExpressions;
 
 namespace sstocker.web.Controllers
@@ -20,13 +20,13 @@ namespace sstocker.web.Controllers
             return View();
         }
 
-        public IActionResult Profile()
+        public IActionResult Profile(string id)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
+                return RedirectWithSite("Login", "Account", id);
 
-            var model = new ProfileViewModel(accountId);
+            var model = new ProfileViewModel(accountId, id);
             model.SetBaseViewModel(accountId);
 
             return View(model);
@@ -54,10 +54,19 @@ namespace sstocker.web.Controllers
             }
         }
 
-        public ActionResult Logout()
+        public ActionResult Logout(string id)
         {
             HttpContext.Session.Set(SessionHelper.SessionKeyAccountId, 0);
-            return RedirectToAction("Dashboard", "Home");
+
+            switch (id)
+            {
+                case LoginHelper.BudgetApp:
+                    return RedirectToAction("Dashboard", "BudgetHome");
+                case LoginHelper.WishlistApp:
+                    return RedirectToAction("Dashboard", "WishlistHome");
+                default:
+                    throw new Exception($"{id} is not a valid site.");
+            }
         }
 
         public ActionResult GetName(string username)
@@ -92,27 +101,40 @@ namespace sstocker.web.Controllers
             return Json(new { status = true, message = $"User {username} created." });
         }
 
-        public ActionResult DeleteProfileImage()
+        public ActionResult DeleteProfileImage(string id)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
+                return RedirectWithSite("Login", "Account", id);
 
             AccountRepository.DeleteAccountImage(accountId);
 
             return Json(new { status = true });
         }
 
-        public ActionResult UpdateProfileImage(string image)
+        public ActionResult UpdateProfileImage(string id, string image)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
+                return RedirectWithSite("Login", "Account", id);
 
             if (!string.IsNullOrWhiteSpace(image))
                 AccountRepository.UpdateAccountImage(accountId, Regex.Replace(image, @"data:image\/.*?;base64,", ""));
 
             return Json(new { status = true });
+        }
+
+        private RedirectToActionResult RedirectWithSite(string action, string controller, string site)
+        {
+            switch (site)
+            {
+                case LoginHelper.BudgetApp:
+                    return RedirectToAction(action, controller, new { id = LoginHelper.BudgetApp });
+                case LoginHelper.WishlistApp:
+                    return RedirectToAction(action, controller, new { id = LoginHelper.WishlistApp });
+                default:
+                    throw new Exception($"{site} is not a valid site.");
+            }
         }
     }
 }

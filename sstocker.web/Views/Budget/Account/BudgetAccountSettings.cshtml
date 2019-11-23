@@ -37,7 +37,7 @@
     <input style="width: 100%" type="button" value="Save" onclick="Save()" />
     <br />
     <br />
-    <input style="width: 100%" type="button" value="Cancel" onclick="window.location.href='@Url.Action("Dashboard", "Home")';" />
+    <input style="width: 100%" type="button" value="Cancel" onclick="window.location.href='@Url.Action("Dashboard", "BudgetHome")';" />
     <br />
     <br />
 
@@ -76,7 +76,7 @@
                     },
                     success: function (result) {
                         if (result.status == true) {
-                            window.location.href = '@Url.Action("Dashboard", "Home")';
+                            window.location.href = '@Url.Action("Dashboard", "BudgetHome")';
                         }
                         else {
                             alert(result.message);

@@ -18,13 +18,13 @@
     @if (Model.Shared.SharedDashboard)
     {
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h5><a href="@Url.Action("Dashboard", "Home")">Go to Personal Dashboard</a></h5>
+            <h5><a href="@Url.Action("Dashboard", "BudgetHome")">Go to Personal Dashboard</a></h5>
         </div>
     }
     else
     {
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h5><a href="@Url.Action("Dashboard", "Home", new { shared = true })">Go to Shared Dashboard</a></h5>
+            <h5><a href="@Url.Action("Dashboard", "BudgetHome", new { shared = true })">Go to Shared Dashboard</a></h5>
         </div>
     }
 }
@@ -249,7 +249,7 @@
             $.ajax(
                 {
                     type: "POST",
-                    url: '@Url.Action("AddTransfer", "Home")',
+                    url: '@Url.Action("AddTransfer", "BudgetHome")',
                     data: {
                         amount: amount,
                         date: fordate
@@ -260,7 +260,7 @@
                     success: function (result) {
                         console.log(result);
                         if (result.status == true) {
-                            window.location.href = '@Url.Action("Dashboard", "Home")';
+                            window.location.href = '@Url.Action("Dashboard", "BudgetHome")';
                         }
                         else {
                             alert(result.message);

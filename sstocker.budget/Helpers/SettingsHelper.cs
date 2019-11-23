@@ -15,9 +15,9 @@
             return GetViewPath("Expense", action);
         }
 
-        public static string GetHomeControllerViewPath(string action = "Index")
+        public static string GetBudgetHomeControllerViewPath(string action = "Index")
         {
-            return GetViewPath("Home", action);
+            return GetViewPath("BudgetHome", action);
         }
 
         public static string GetIncomeControllerViewPath(string action = "Index")
@@ -25,7 +25,7 @@
             return GetViewPath("Income", action);
         }
 
-        public static string GetViewPath(string controller, string action)
+        private static string GetViewPath(string controller, string action)
         {
             return $"Views/Budget/{controller}/{action}.cshtml";
         }
