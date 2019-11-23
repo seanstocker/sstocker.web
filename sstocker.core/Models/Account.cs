@@ -1,7 +1,7 @@
-﻿using sstocker.budget.Helpers;
+﻿using sstocker.core.Helpers;
 using System;
 
-namespace sstocker.budget.Models
+namespace sstocker.core.Models
 {
     public class Account
     {

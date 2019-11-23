@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace sstocker.budget.Models
+namespace sstocker.core.Models
 {
     public class AccountSettings<T>
     {

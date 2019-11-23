@@ -22,7 +22,7 @@ namespace sstocker.core.Helpers
             var ip = Dns.GetHostEntry(hostname).AddressList[0].ToString();
             var value = session.GetString($"{hostname}_{ip}_{key}");
 
-            return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+            return value == null ? default : JsonConvert.DeserializeObject<T>(value);
         }
     }
 }

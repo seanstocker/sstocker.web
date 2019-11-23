@@ -1,64 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using sstocker.budget.Enums;
-using sstocker.budget.Helpers;
-using sstocker.budget.Models;
-using sstocker.budget.Repositories;
 using sstocker.budget.ViewModels;
 using sstocker.core.Helpers;
-using System;
-using System.Linq;
+using sstocker.core.Models;
+using sstocker.core.Repositories;
+using sstocker.core.ViewModels;
 using System.Text.RegularExpressions;
 
 namespace sstocker.web.Controllers
 {
-    [Route(SettingsHelper.ControllerRoute)]
     public class AccountController : Controller
     {
-        public IActionResult Login()
+        public IActionResult Login(string id)
         {
-            return View(SettingsHelper.GetAccountControllerViewPath("Login"));
+            return View(new LoginViewModel(id));
         }
 
         public IActionResult AddAccount()
         {
-            return View(SettingsHelper.GetAccountControllerViewPath("AddAccount"));
-        }
-
-        public IActionResult Settings(bool shared)
-        {
-            var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
-                return RedirectToAction("Login", "Account");
-
-            var hasSharedAccount = AccountHelper.HasSharedAccount(accountId);
-
-            if (hasSharedAccount && shared)
-            {
-                var sharedAccountId = AccountHelper.GetSharedAccountId(accountId);
-                var settings = AccountRepository.GetAccountSettings<CategorySetting>(sharedAccountId, SettingsHelper.CategorySettingKey);
-                var model = new AccountSettingsViewModel(settings, true, hasSharedAccount);
-                model.SetBaseViewModel(accountId);
-                return View(SettingsHelper.GetAccountControllerViewPath("Settings"), model);
-            }
-            else
-            {
-                var settings = AccountRepository.GetAccountSettings<CategorySetting>(accountId, SettingsHelper.CategorySettingKey);
-                var model = new AccountSettingsViewModel(settings, false, hasSharedAccount);
-                model.SetBaseViewModel(accountId);
-                return View(SettingsHelper.GetAccountControllerViewPath("Settings"), model);
-            }
+            return View();
         }
 
         public IActionResult Profile()
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
-                return RedirectToAction("Login", "Account");
+            if (accountId == default)
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             var model = new ProfileViewModel(accountId);
             model.SetBaseViewModel(accountId);
 
-            return View(SettingsHelper.GetAccountControllerViewPath("Profile"), model);
+            return View(model);
         }
 
         public ActionResult Validate(string username, string password)
@@ -121,42 +92,11 @@ namespace sstocker.web.Controllers
             return Json(new { status = true, message = $"User {username} created." });
         }
 
-        public ActionResult SaveSettings(string model, bool isSharedAccount)
-        {
-            var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
-                return RedirectToAction("Login", "Account");
-
-            var savingAccountId = isSharedAccount ? AccountHelper.GetSharedAccountId(accountId) : accountId;
-
-            var settings = model.Split("|");
-            var categories = CategoryHelper.GetCategories();
-
-            foreach (var setting in settings)
-            {
-                var split = setting.Split(",");
-                var name = split[0];
-                var categoryId = categories.Single(c => c.Name == name).CategoryId;
-                var categorySetting = new CategorySetting
-                {
-                    IsActive = bool.Parse(split[1]),
-                    IsCritical = bool.Parse(split[2]),
-                    Unlimited = bool.Parse(split[3]),
-                    Amount = long.Parse(split[4]),
-                    Duration = (Duration)Enum.Parse(typeof(Duration), split[5])
-                };
-
-                AccountRepository.AddOrUpdateAccountSetting(savingAccountId, SettingsHelper.CategorySettingKey, categoryId, categorySetting);
-            }
-
-            return Json(new { status = true, message = "Settings Saved" });
-        }
-
         public ActionResult DeleteProfileImage()
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
-                return RedirectToAction("Login", "Account");
+            if (accountId == default)
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             AccountRepository.DeleteAccountImage(accountId);
 
@@ -166,8 +106,8 @@ namespace sstocker.web.Controllers
         public ActionResult UpdateProfileImage(string image)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
-                return RedirectToAction("Login", "Account");
+            if (accountId == default)
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             if (!string.IsNullOrWhiteSpace(image))
                 AccountRepository.UpdateAccountImage(accountId, Regex.Replace(image, @"data:image\/.*?;base64,", ""));

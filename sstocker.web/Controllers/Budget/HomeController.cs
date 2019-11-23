@@ -5,6 +5,7 @@ using sstocker.budget.Models;
 using sstocker.budget.Repositories;
 using sstocker.budget.ViewModels;
 using sstocker.core.Helpers;
+using sstocker.core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             if (shared)
             {
@@ -40,7 +41,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             if (string.IsNullOrWhiteSpace(amount))
                 return Json(new { status = false, message = "Amount is required" });

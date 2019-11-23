@@ -1,4 +1,5 @@
-﻿using sstocker.budget.Repositories;
+﻿using sstocker.core.Repositories;
+using sstocker.core.ViewModels;
 
 namespace sstocker.budget.ViewModels
 {

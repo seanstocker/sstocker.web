@@ -1,4 +1,6 @@
 ﻿using sstocker.budget.Helpers;
+using sstocker.core.Helpers;
+using sstocker.core.ViewModels;
 using System.Collections.Generic;
 
 namespace sstocker.budget.ViewModels

@@ -1,6 +1,8 @@
 ﻿@{
     Layout = null;
 }
+@model sstocker.core.ViewModels.LoginViewModel
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,7 +99,7 @@
                 success: function (result) {
                     console.log(result);
                     if (result.status == true) {
-                        window.location.href = '@Url.Action("Dashboard", "Home")';
+                        window.location.href = '@Url.Action(Model.ActionName, Model.ControllerName)';
                     }
                     else {
                         alert(result.message);

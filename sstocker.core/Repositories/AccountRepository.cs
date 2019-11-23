@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using sstocker.budget.Models;
+using sstocker.core.Models;
 using sstocker.core.Helpers;
 using System;
 
-namespace sstocker.budget.Repositories
+namespace sstocker.core.Repositories
 {
     public static class AccountRepository
     {

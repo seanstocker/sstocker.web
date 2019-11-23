@@ -13,8 +13,8 @@ namespace sstocker.web.Controllers
         public IActionResult AddIncome()
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
-                return RedirectToAction("Login", "Account");
+            if (accountId == default)
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             var model = new AddIncomeModel(accountId);
             model.SetBaseViewModel(accountId);
@@ -24,11 +24,8 @@ namespace sstocker.web.Controllers
         public ActionResult SaveIncome(string source, string type, string amount, string date)
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
-            if (accountId == default(long))
-                return RedirectToAction("Login", "Account");
-
-            decimal amountValue;
-            DateTime dateValue;
+            if (accountId == default)
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             if (string.IsNullOrWhiteSpace(source))
                 return Json(new { status = false, message = "Source is required" });
@@ -36,11 +33,11 @@ namespace sstocker.web.Controllers
                 return Json(new { status = false, message = "Type is required" });
             if (string.IsNullOrWhiteSpace(amount))
                 return Json(new { status = false, message = "Amount is required" });
-            if (!decimal.TryParse(amount, out amountValue))
+            if (!decimal.TryParse(amount, out decimal amountValue))
                 return Json(new { status = false, message = "Amount is required" });
             if (string.IsNullOrWhiteSpace(date))
                 return Json(new { status = false, message = "Date is required" });
-            if (!DateTime.TryParse(date, out dateValue))
+            if (!DateTime.TryParse(date, out DateTime dateValue))
                 return Json(new { status = false, message = "Date is required" });
 
             var sourceId = IncomeSourceHelper.GetOrAddIncomeSourceId(source);

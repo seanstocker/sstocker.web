@@ -6,6 +6,7 @@ using sstocker.budget.Models;
 using sstocker.budget.Repositories;
 using sstocker.budget.ViewModels;
 using sstocker.core.Helpers;
+using sstocker.core.Repositories;
 using System;
 using System.Linq;
 
@@ -18,7 +19,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             var model = GetExpenseSummary(accountId, TimePeriod);
             model.SetBaseViewModel(accountId);
@@ -29,7 +30,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             var sharedAccountId = AccountHelper.GetSharedAccountId(accountId);
             var model = GetExpenseSummary(sharedAccountId, TimePeriod);
@@ -41,7 +42,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             var model = GetSummaryModel(accountId, TimePeriod ?? SummaryTimePeriod.Past30Days);
             model.SetBaseViewModel(accountId);
@@ -52,7 +53,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             var model = GetBudgetSummaryModel(accountId);
             model.SetBaseViewModel(accountId);
@@ -63,7 +64,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             var model = new AddExpenseModel(accountId);
             model.SetBaseViewModel(accountId);
@@ -74,7 +75,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             var model = new EditExpenseModel(accountId, id);
             model.SetBaseViewModel(accountId);
@@ -85,7 +86,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
             if (id == default || id == Guid.Empty)
                 return RedirectToAction("ExpenseSummary", "Expense");
@@ -99,7 +100,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
 
             if (string.IsNullOrWhiteSpace(store))
@@ -134,7 +135,7 @@ namespace sstocker.web.Controllers
         {
             var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
             if (accountId == default)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
 
             if (id == default || id == Guid.Empty)

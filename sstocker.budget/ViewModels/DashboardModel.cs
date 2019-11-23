@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sstocker.core.ViewModels;
+using System;
 using System.Collections.Generic;
 
 namespace sstocker.budget.ViewModels

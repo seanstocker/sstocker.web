@@ -14,12 +14,12 @@
         @if (Model.SharedAccountSettings)
         {
             <h2>Shared Account Settings</h2>
-            <h4>@Html.ActionLink("Go to Personal Settings", "Settings", "Account", new { shared = false })</h4>
+            <h4>@Html.ActionLink("Go to Personal Settings", "Settings", "BudgetAccountSettings", new { shared = false })</h4>
         }
         else
         {
             <h2>Personal Account Settings</h2>
-            <h4>@Html.ActionLink("Go to Shared Settings", "Settings", "Account", new { shared = true })</h4>
+            <h4>@Html.ActionLink("Go to Shared Settings", "Settings", "BudgetAccountSettings", new { shared = true })</h4>
         }
     }
     else
@@ -66,7 +66,7 @@
             $.ajax(
                 {
                     type: "POST",
-                    url: '@Url.Action("SaveSettings", "Account")',
+                    url: '@Url.Action("SaveSettings", "BudgetAccountSettings")',
                     data: {
                         model: @Html.Raw(@Model.GetHtmlValues()),
                         isSharedAccount: '@Model.SharedAccountSettings'

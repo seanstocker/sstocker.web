@@ -1,10 +1,10 @@
-﻿using sstocker.budget.Models;
+﻿using sstocker.core.Models;
 using sstocker.core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace sstocker.budget.Repositories
+namespace sstocker.core.Repositories
 {
     public static class SharedAccountRepository
     {

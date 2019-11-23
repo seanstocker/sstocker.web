@@ -1,6 +1,6 @@
-﻿using sstocker.budget.Repositories;
+﻿using sstocker.core.Repositories;
 
-namespace sstocker.budget.ViewModels
+namespace sstocker.core.ViewModels
 {
     public class BaseViewModel
     {

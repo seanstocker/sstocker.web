@@ -1,5 +1,6 @@
 ﻿using sstocker.budget.Enums;
 using sstocker.budget.Models;
+using sstocker.core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

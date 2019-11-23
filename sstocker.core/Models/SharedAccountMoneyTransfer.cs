@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace sstocker.budget.Models
+namespace sstocker.core.Models
 {
     public class SharedAccountMoneyTransfer
     {
