@@ -10,6 +10,11 @@
             return GetViewPath("WishlistHome", action);
         }
 
+        public static string GetListControllerViewPath(string action = "Index")
+        {
+            return GetViewPath("List", action);
+        }
+
         private static string GetViewPath(string controller, string action)
         {
             return $"Views/Wishlist/{controller}/{action}.cshtml";
