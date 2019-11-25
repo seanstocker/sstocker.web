@@ -7,9 +7,12 @@ namespace sstocker.core.ViewModels
     {
         public string ActionName;
         public string ControllerName;
+        public string Site;
 
         public LoginViewModel(string site)
         {
+            Site = site;
+
             switch (site)
             {
                 case LoginHelper.BudgetApp:

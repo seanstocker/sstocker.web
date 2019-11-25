@@ -14,8 +14,7 @@ namespace sstocker.web.Controllers.Wishlist
             if (accountId == default)
                 return RedirectToAction("Login", "Account", new { id = LoginHelper.WishlistApp });
 
-            var model = new DashboardModel();
-            model.SetBaseViewModel(accountId);
+            var model = new DashboardModel(accountId);
             return View(SettingsHelper.GetWishlistHomeControllerViewPath("Dashboard"), model);
         }
     }

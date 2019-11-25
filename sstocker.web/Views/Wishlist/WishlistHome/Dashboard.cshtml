@@ -5,3 +5,128 @@
     ViewBag.AccountImage = Model.AccountImage;
 }
 @model sstocker.wishlist.ViewModels.DashboardModel
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Days till next holiday Card -->
+    <div class="col-xl-12 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Days till @Model.NextHoliday</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.DaysTillNextHoliday Days</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@if (Model.SecondColumn.Any())
+{
+    <!-- DataTales Example -->
+    <div class="row">
+
+        <div class="col-lg-6 mb-4">
+            @for (int i = 0; i < Model.FirstColumn.Count; i++)
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <a href="@Url.Action(Model.FirstColumn[i].TableActionLink, Model.FirstColumn[i].TableControllerLink)">@Model.FirstColumn[i].TableName</a>
+                        </h6>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                <tbody>
+                                    @for (int x = 0; x < Model.FirstColumn[i].TableItems.Count; x++)
+                                    {
+                                        <tr>
+                                            <td>@Model.FirstColumn[i].TableItems[x]</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            @for (int i = 0; i < Model.SecondColumn.Count; i++)
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <a href="@Url.Action(Model.SecondColumn[i].TableActionLink, Model.SecondColumn[i].TableControllerLink)">@Model.SecondColumn[i].TableName</a>
+                        </h6>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                <tbody>
+                                    @for (int x = 0; x < Model.SecondColumn[i].TableItems.Count; x++)
+                                    {
+                                        <tr>
+                                            <td>@Model.SecondColumn[i].TableItems[x]</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+}
+else
+{
+    <!-- DataTales Example -->
+    <div class="row">
+
+        <div class="col-xl-12 col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <a href="@Url.Action(Model.FirstColumn[0].TableActionLink, Model.FirstColumn[0].TableControllerLink)">@Model.FirstColumn[0].TableName</a>
+                    </h6>
+                </div>
+                <div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="dataTable" width="100%" cellspacing="0">
+                            <tbody>
+                                @for (int x = 0; x < Model.FirstColumn[0].TableItems.Count; x++)
+                                {
+                                    <tr>
+                                        <td>@Model.FirstColumn[0].TableItems[x]</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

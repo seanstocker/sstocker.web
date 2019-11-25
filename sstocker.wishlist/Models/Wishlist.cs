@@ -7,5 +7,6 @@
         public string Name;
         public string Link;
         public string Description;
+        public bool IsBought;
     }
 }

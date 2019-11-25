@@ -15,9 +15,9 @@ namespace sstocker.web.Controllers
             return View(new LoginViewModel(id));
         }
 
-        public IActionResult AddAccount()
+        public IActionResult AddAccount(string id)
         {
-            return View();
+            return View(new LoginViewModel(id));
         }
 
         public IActionResult Profile(string id)

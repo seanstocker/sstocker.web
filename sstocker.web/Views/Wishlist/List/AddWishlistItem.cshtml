@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "_wishlistLayout";
+    ViewBag.Title = "Add Wishlist Item";
+    ViewBag.AccountName = Model.AccountName;
+    ViewBag.AccountImage = Model.AccountImage;
+}
+
+@model sstocker.wishlist.ViewModels.AddWishlistItemViewModel
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            Add Wishlist Item
+        </h6>
+    </div>
+    <div>
+    </div>
+    <div class="card-body">
+        <div class="form-row">
+            <div class="input-group hide-inputbtn">
+                <input placeholder="Enter Name..." id="NameInput" type="text" maxlength="100" class="form-control form-control-user" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="form-row">
+            <div class="input-group hide-inputbtn">
+                <input placeholder="Enter Description..." id="DescriptionInput" type="text" maxlength="1000" class="form-control form-control-user" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="form-row">
+            <div class="input-group hide-inputbtn">
+                <input placeholder="Enter Link..." id="LinkInput" type="text" maxlength="100" class="form-control form-control-user" />
+            </div>
+        </div>
+
+        <br />
+        <span class="btn btn-primary" style="width: 100%" onclick="SaveWishlistItem()">Save</span>
+        <br />
+        <br />
+        <span class="btn btn-secondary" style="width: 100%" onclick="window.location.href='@Url.Action("YourList", "List")';">Cancel</span>
+    </div>
+</div>
+
+<script>
+        function SaveWishlistItem() {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: '@Url.Action("SaveWishlistItem", "List")',
+                    data: {
+                        name: $('#NameInput').val(),
+                        description: $('#DescriptionInput').val(),
+                        link: $('#LinkInput').val()
+                    },
+                    error: function () {
+                        alert("There is a Problem, Try Again!");
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        if (result.status == true) {
+                            window.location.href = '@Url.Action("YourList", "List")';
+                        }
+                        else {
+                            alert(result.message);
+                        }
+                    }
+                });
+        }
+</script>

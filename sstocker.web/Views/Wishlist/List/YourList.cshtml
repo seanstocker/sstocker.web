@@ -5,3 +5,51 @@
     ViewBag.AccountImage = Model.AccountImage;
 }
 @model sstocker.wishlist.ViewModels.YourListViewModel
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            Your Wishlist
+        </h6>
+    </div>
+    <div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        @for (int x = 0; x < Model.ColumnNames.Count; x++)
+                        {
+                            <th>@Model.ColumnNames[x]</th>
+                        }
+                        @*<th>Edit/Delete</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int x = 0; x < Model.WishList.Count; x++)
+                    {
+                        <tr>
+                            @for (int y = 0; y < Model.ColumnNames.Count; y++)
+                            {
+                                <td>@Html.Raw(Model.GetColumn(x, y))</td>
+                            }
+                            @*<td width="1%">
+                            <a href="@Url.Action("EditExpense", "Expense", new { id = Model.Expenses[x].ExternalGuid })" class="btn btn-info btn-circle btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="" class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#deleteModal"
+                               data-expenseid="@Model.Expenses[x].ExternalGuid" data-store="@Model.Expenses[x].Store" data-amount="@Model.Expenses[x].Amount" data-category="@Model.Expenses[x].Category" data-spentdate="@Model.Expenses[x].SpentDate.ToShortDateString()">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <a href="@Url.Action("AddWishlistItem", "List")" class="btn btn-success btn-block"><i class="fas fa-plus-circle fa-fw"></i>Add Item</a>
+        </div>
+    </div>
+</div>
+
