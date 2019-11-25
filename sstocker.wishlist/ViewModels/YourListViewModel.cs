@@ -14,7 +14,7 @@ namespace sstocker.wishlist.ViewModels
         public YourListViewModel(long accountId)
         {
             WishList = WishlistRepository.GetWishlist(accountId);
-            ColumnNames = new List<string> { "Name", "Description", "Link" };
+            ColumnNames = new List<string> { "Name", "Description" };
             SetBaseViewModel(accountId);
         }
 
@@ -23,13 +23,11 @@ namespace sstocker.wishlist.ViewModels
             switch (columnLocation)
             {
                 case 0:
-                    return WishList[index].Name;
+                    return string.IsNullOrWhiteSpace(WishList[index].Link)
+                        ? WishList[index].Name
+                        : $"<a href=\"{WishList[index].Link}\">{WishList[index].Name}</a>";
                 case 1:
                     return WishList[index].Description ?? "";
-                case 2:
-                    return string.IsNullOrWhiteSpace(WishList[index].Link)
-                        ? ""
-                        : $"<a href=\"{WishList[index].Link}\">{WishList[index].Link}</a>";
                 default:
                     throw new Exception("Not a valid column location.");
             }

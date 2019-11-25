@@ -24,7 +24,6 @@
                         {
                             <th>@Model.ColumnNames[x]</th>
                         }
-                        @*<th>Edit/Delete</th>*@
                     </tr>
                 </thead>
                 <tbody>
@@ -35,15 +34,6 @@
                             {
                                 <td>@Html.Raw(Model.GetColumn(x, y))</td>
                             }
-                            @*<td width="1%">
-                            <a href="@Url.Action("EditExpense", "Expense", new { id = Model.Expenses[x].ExternalGuid })" class="btn btn-info btn-circle btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="" class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#deleteModal"
-                               data-expenseid="@Model.Expenses[x].ExternalGuid" data-store="@Model.Expenses[x].Store" data-amount="@Model.Expenses[x].Amount" data-category="@Model.Expenses[x].Category" data-spentdate="@Model.Expenses[x].SpentDate.ToShortDateString()">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                        </td>*@
                         </tr>
                     }
                 </tbody>

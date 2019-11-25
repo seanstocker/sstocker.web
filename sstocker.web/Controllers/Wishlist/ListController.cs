@@ -4,6 +4,7 @@ using sstocker.core.Helpers;
 using sstocker.wishlist.Helpers;
 using sstocker.wishlist.Repositories;
 using sstocker.wishlist.ViewModels;
+using System;
 
 namespace sstocker.web.Controllers.Wishlist
 {
@@ -58,6 +59,29 @@ namespace sstocker.web.Controllers.Wishlist
 
             WishlistRepository.AddWishlistItem(accountId, name, description, link);
             return Json(new { status = true, message = "Wishlist Item Added!" });
+        }
+
+        public ActionResult BuyWishlistItem(string wishlistid)
+        {
+            var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
+            if (accountId == default)
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
+
+            if (string.IsNullOrWhiteSpace(wishlistid))
+                return Json(new { status = false, message = "WishlistId is required." });
+            if (!long.TryParse(wishlistid, out long wishlistIdValue))
+                return Json(new { status = false, message = "WishlistId is not a number." });
+
+            try
+            {
+                WishlistRepository.BuyWishlistItem(wishlistIdValue, accountId, new DateTime(DateTime.Now.Year, 12, 25), DateTime.Now);
+            }
+            catch (Exception)
+            {
+                return Json(new { status = false, message = "Could not buy item." });
+            }
+
+            return Json(new { status = true, message = "Bought Item!" });
         }
     }
 }

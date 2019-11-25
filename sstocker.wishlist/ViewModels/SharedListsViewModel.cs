@@ -15,7 +15,7 @@ namespace sstocker.wishlist.ViewModels
         public SharedListsViewModel(long accountId)
         {
             SharedWishLists = new List<SharedWishList>();
-            ColumnNames = new List<string> { "Name", "Description", "Link" };
+            ColumnNames = new List<string> { "Name", "Description" };
             var sharedAccountIds = WishlistRepository.GetSharedAccountIds(accountId);
 
             foreach (var sharedAccountId in sharedAccountIds)
@@ -28,12 +28,12 @@ namespace sstocker.wishlist.ViewModels
     public class SharedWishList
     {
         public string Name;
-        public List<Wishlist> WishList;
+        public List<SpentWishlist> WishList;
 
         public SharedWishList(long sharedAccountId)
         {
             Name = AccountRepository.GetAccount(sharedAccountId).Name;
-            WishList = WishlistRepository.GetWishlist(sharedAccountId);
+            WishList = WishlistRepository.GetSpentWishlist(sharedAccountId);
         }
 
         public string GetColumn(int index, int columnLocation)
@@ -41,13 +41,11 @@ namespace sstocker.wishlist.ViewModels
             switch (columnLocation)
             {
                 case 0:
-                    return WishList[index].Name;
+                    return string.IsNullOrWhiteSpace(WishList[index].Link)
+                        ? WishList[index].Name
+                        : $"<a href=\"{WishList[index].Link}\">{WishList[index].Name}</a>";
                 case 1:
                     return WishList[index].Description ?? "";
-                case 2:
-                    return string.IsNullOrWhiteSpace(WishList[index].Link)
-                        ? ""
-                        : $"<a href=\"{WishList[index].Link}\">{WishList[index].Link}</a>";
                 default:
                     throw new Exception("Not a valid column location.");
             }
