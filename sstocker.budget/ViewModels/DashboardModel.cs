@@ -12,6 +12,8 @@ namespace sstocker.budget.ViewModels
         public decimal SpentThisYear;
         public ChartJSChartModel ExpensesLineChart;
         public ChartJSChartModel IncomeLineChart;
+        public ChartJSChartModel SharedExpensesLineChart;
+        public ChartJSChartModel SpentExpensesLineChart;
         public ChartJSChartModel PieChart;
         public List<BudgetOverview> BudgetOverviewList;
         public SharedDashboardModel Shared;
@@ -20,6 +22,8 @@ namespace sstocker.budget.ViewModels
         {
             ExpensesLineChart = new ChartJSChartModel();
             IncomeLineChart = new ChartJSChartModel();
+            SharedExpensesLineChart = new ChartJSChartModel();
+            SpentExpensesLineChart = new ChartJSChartModel();
             PieChart = new ChartJSChartModel();
             BudgetOverviewList = new List<BudgetOverview>();
             Shared = new SharedDashboardModel();
@@ -94,11 +98,13 @@ namespace sstocker.budget.ViewModels
     {
         public List<string> Labels;
         public List<decimal> Amounts;
+        public bool Show;
 
         public ChartJSChartModel()
         {
             Labels = new List<string>();
             Amounts = new List<decimal>();
+            Show = true;
         }
 
         public void AddPoint(string label, decimal amount)

@@ -89,6 +89,21 @@ namespace sstocker.web.Controllers
 
             model.Shared = GetSharedDashboardModel(accountId, sharedAccountId, sharedDashboard);
 
+            if (sharedDashboard || !sharedAccountId.HasValue)
+            {
+                model.SharedExpensesLineChart.Show = false;
+                model.SpentExpensesLineChart.Show = false;
+            }
+            else
+            {
+                var spentExpenses = ExpenseRepository.GetAccountExpensesIncludeShared(accountId);
+                spentExpenses.AddRange(GetMoneyTransferAsExpense(accountId, sharedAccountId.GetValueOrDefault()));
+                var sharedExpenses = ExpenseRepository.GetAccountExpenses(accountId);
+                sharedExpenses.AddRange(ExpenseRepository.GetAccountExpenses(sharedAccountId.GetValueOrDefault()));
+                model.SpentExpensesLineChart = GetLineChart(spentExpenses);
+                model.SharedExpensesLineChart = GetLineChart(sharedExpenses);
+            }
+
             return model;
         }
 
@@ -256,6 +271,46 @@ namespace sstocker.web.Controllers
             finalAmount = finalAmount - youPayed + youRecieved;
 
             return finalAmount;
+        }
+
+        private List<Expense> GetMoneyTransferAsExpense(long accountId, long sharedAccountId)
+        {
+            var transfers = SharedAccountRepository.GetSharedAccountMoneyTransfer(sharedAccountId);
+            var expenses = new List<Expense>();
+
+            foreach (var transfer in transfers)
+            {
+                if(transfer.PayedAccountId == accountId)
+                {
+                    expenses.Add(new Expense
+                    {
+                        AccountId = accountId,
+                        Amount = transfer.Amount * -1,
+                        ExternalGuid = transfer.ExternalGuid,
+                        SpentDate = transfer.TransferDate,
+                        Store = AccountRepository.GetAccount(transfer.PayerAccountId, false).Name,
+                        SpentAccountId = accountId,
+                        Category = "Transfer",
+                        ExpenseId = -1
+                    });
+                }
+                else if(transfer.PayerAccountId == accountId)
+                {
+                    expenses.Add(new Expense
+                    {
+                        AccountId = accountId,
+                        Amount = transfer.Amount,
+                        ExternalGuid = transfer.ExternalGuid,
+                        SpentDate = transfer.TransferDate,
+                        Store = AccountRepository.GetAccount(transfer.PayerAccountId, false).Name,
+                        SpentAccountId = accountId,
+                        Category = "Transfer",
+                        ExpenseId = -1
+                    });
+                }
+            }
+
+            return expenses;
         }
     }
 }

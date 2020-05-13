@@ -275,43 +275,83 @@
         Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
         Chart.defaults.global.defaultFontColor = '#858796';
 
+        var dataSets = [];
+        if (@Model.ExpensesLineChart.Show.ToString().ToLowerInvariant()) {
+            dataSets.push({
+                label: "Expenses",
+                lineTension: 0.3,
+                backgroundColor: "#00000000",
+                borderColor: "@Model.GetPrimaryColor(0)",
+                pointRadius: 3,
+                pointBackgroundColor: "@Model.GetPrimaryColor(0)",
+                pointBorderColor: "@Model.GetPrimaryColor(0)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "@Model.GetPrimaryColor(0)",
+                pointHoverBorderColor: "@Model.GetPrimaryColor(0)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: @Json.Serialize(Model.ExpensesLineChart.Amounts)
+            });
+        }
+        if (@Model.IncomeLineChart.Show.ToString().ToLowerInvariant()) {
+            dataSets.push({
+                label: "Income",
+                lineTension: 0.3,
+                backgroundColor: "#00000000",
+                borderColor: "@Model.GetPrimaryColor(1)",
+                pointRadius: 3,
+                pointBackgroundColor: "@Model.GetPrimaryColor(1)",
+                pointBorderColor: "@Model.GetPrimaryColor(1)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "@Model.GetPrimaryColor(1)",
+                pointHoverBorderColor: "@Model.GetPrimaryColor(1)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: @Json.Serialize(Model.IncomeLineChart.Amounts)
+            });
+        }
+        if (@Model.SharedExpensesLineChart.Show.ToString().ToLowerInvariant()) {
+            dataSets.push({
+                label: "Shared Expense",
+                lineTension: 0.3,
+                backgroundColor: "#00000000",
+                borderColor: "@Model.GetPrimaryColor(2)",
+                pointRadius: 3,
+                pointBackgroundColor: "@Model.GetPrimaryColor(2)",
+                pointBorderColor: "@Model.GetPrimaryColor(2)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "@Model.GetPrimaryColor(2)",
+                pointHoverBorderColor: "@Model.GetPrimaryColor(2)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: @Json.Serialize(Model.SharedExpensesLineChart.Amounts)
+            });
+        }
+        if (@Model.SpentExpensesLineChart.Show.ToString().ToLowerInvariant()) {
+            dataSets.push({
+                label: "Spent Expense",
+                lineTension: 0.3,
+                backgroundColor: "#00000000",
+                borderColor: "@Model.GetPrimaryColor(3)",
+                pointRadius: 3,
+                pointBackgroundColor: "@Model.GetPrimaryColor(3)",
+                pointBorderColor: "@Model.GetPrimaryColor(3)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "@Model.GetPrimaryColor(3)",
+                pointHoverBorderColor: "@Model.GetPrimaryColor(3)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: @Json.Serialize(Model.SpentExpensesLineChart.Amounts)
+            });
+        }
+
         // Area Chart Example
         var ctx = document.getElementById("myAreaChart");
         var myLineChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: @Json.Serialize(@Model.ExpensesLineChart.Labels),
-                datasets: [
-                    {
-                        label: "Expenses",
-                        lineTension: 0.3,
-                        backgroundColor: "#00000000",
-                        borderColor: "@Model.GetPrimaryColor(0)",
-                        pointRadius: 3,
-                        pointBackgroundColor: "@Model.GetPrimaryColor(0)",
-                        pointBorderColor: "@Model.GetPrimaryColor(0)",
-                        pointHoverRadius: 3,
-                        pointHoverBackgroundColor: "@Model.GetPrimaryColor(0)",
-                        pointHoverBorderColor: "@Model.GetPrimaryColor(0)",
-                        pointHitRadius: 10,
-                        pointBorderWidth: 2,
-                        data: @Json.Serialize(Model.ExpensesLineChart.Amounts)
-                    },
-                    {
-                        label: "Income",
-                        lineTension: 0.3,
-                        backgroundColor: "#00000000",
-                        borderColor: "@Model.GetPrimaryColor(1)",
-                        pointRadius: 3,
-                        pointBackgroundColor: "@Model.GetPrimaryColor(1)",
-                        pointBorderColor: "@Model.GetPrimaryColor(1)",
-                        pointHoverRadius: 3,
-                        pointHoverBackgroundColor: "@Model.GetPrimaryColor(1)",
-                        pointHoverBorderColor: "@Model.GetPrimaryColor(1)",
-                        pointHitRadius: 10,
-                        pointBorderWidth: 2,
-                        data: @Json.Serialize(Model.IncomeLineChart.Amounts)
-                    }]
+                datasets: dataSets
             },
             options: {
                 maintainAspectRatio: false,
