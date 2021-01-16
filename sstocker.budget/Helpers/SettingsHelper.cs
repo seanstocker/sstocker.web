@@ -25,6 +25,11 @@
             return GetViewPath("Income", action);
         }
 
+        public static string GetSnapshotControllerViewPath(string action = "Index")
+        {
+            return GetViewPath("Snapshot", action);
+        }
+
         private static string GetViewPath(string controller, string action)
         {
             return $"Views/Budget/{controller}/{action}.cshtml";
