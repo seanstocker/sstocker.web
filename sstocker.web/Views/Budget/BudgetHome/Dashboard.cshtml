@@ -6,14 +6,31 @@
 }
 @model sstocker.budget.ViewModels.DashboardModel
 <!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-    <div>
-        <a href="@Url.Action("AddExpense", "Expense")" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Add Expense</a>
-        <a href="@Url.Action("AddIncome", "Income")" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Add Income</a>
-        <a href="@Url.Action("AddSnapshot", "Snapshot")" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Add Snapshot</a>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <div>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle d-sm-inline-block btn btn-sm btn-primary shadow-sm" style="padding: 2px 57px;" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Add
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu shadow animated--fade-in" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="@Url.Action("AddExpense", "Expense")">
+                        <i class="fas fa-money-bill fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Expense
+                    </a>
+                    <a class="dropdown-item" href="@Url.Action("AddIncome", "Income")">
+                        <i class="fas fa-money-check-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Income
+                    </a>
+                    <a class="dropdown-item" href="@Url.Action("AddSnapshot", "Snapshot")">
+                        <i class="fas fa-camera fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Snapshot
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 @if (Model.Shared.HasSharedAccount)
 {
     @if (Model.Shared.SharedDashboard)
