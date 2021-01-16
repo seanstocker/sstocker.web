@@ -7,7 +7,7 @@ namespace sstocker.budget.Repositories
 {
     public static class SnapshotRepository
     {
-        public static List<Snapshot> GetAccountIncome(long accountId)
+        public static List<Snapshot> GetAccountSnapshots(long accountId)
         {
             var sql = @"
 SELECT s.SnapShotId, s.AccountId, b.Name Bank, t.BankType BankType, s.Amount, s.SnapShotDate, eg.ExternalGuid

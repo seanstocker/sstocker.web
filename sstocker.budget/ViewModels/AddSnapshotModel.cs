@@ -9,7 +9,7 @@ namespace sstocker.budget.ViewModels
         public List<string> Banks;
         public List<string> BankTypes;
 
-        public AddSnapshotModel(long accountId)
+        public AddSnapshotModel()
         {
             Banks = BankHelper.GetBankNames();
             BankTypes = BankHelper.GetBankTypeNames();

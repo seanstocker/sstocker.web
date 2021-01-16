@@ -1,0 +1,225 @@
+﻿@{
+    Layout = "_budgetLayout";
+    ViewBag.Title = "View Snapshot";
+    ViewBag.AccountName = Model.AccountName;
+    ViewBag.AccountImage = Model.AccountImage;
+}
+
+@model sstocker.budget.ViewModels.SnapshotSummaryModel
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            Sort By
+        </h6>
+    </div>
+    <div>
+    </div>
+    <div class="card-body">
+        <div class="form-row">
+            <div class="radio-toolbar">
+                <input type="radio" id="monthlygrouping" name="dategroupings" value="monthly" onclick="tableCreate()" checked>
+                <label for="monthlygrouping">Monthly</label>
+
+                <input type="radio" id="yearlygrouping" name="dategroupings" value="yearly" onclick="tableCreate()">
+                <label for="yearlygrouping">Yearly</label>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="radio-toolbar">
+                <input type="radio" id="bankgrouping" name="groupings" value="bank" onclick="tableCreate()" checked>
+                <label for="bankgrouping">Bank</label>
+
+                <input type="radio" id="typegrouping" name="groupings" value="type" onclick="tableCreate()">
+                <label for="typegrouping">Type</label>
+
+                <input type="radio" id="allgrouping" name="groupings" value="all" onclick="tableCreate()">
+                <label for="allgrouping">All</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="tableHolder">
+
+</div>
+
+<script>
+    $(document).ready(tableCreate());
+
+    function tableCreate() {
+        var holder = document.getElementById('tableHolder');
+        removeAllChildNodes(holder);
+
+        var bankgrouping = document.querySelector('input[name="groupings"]:checked').value;
+        var dategrouping = document.querySelector('input[name="dategroupings"]:checked').value;
+
+        var snapshots = getSnapshots(bankgrouping, dategrouping);
+
+        for (var i = 0; i < snapshots.length; i++) {
+            var snapshot = snapshots[i];
+            var card = createTableCard(snapshot.title);
+            var tbl = document.createElement('table');
+            createTable(tbl, snapshots[i], dategrouping);
+            card.childNodes[2].appendChild(tbl);
+            holder.appendChild(card);
+        }
+    }
+
+    function getSnapshots(bankgrouping, dategrouping) {
+        if (bankgrouping == 'bank' && dategrouping == 'monthly') {
+            return @Html.Raw(Json.Serialize(Model.MonthlyBankSnapshots));
+        } else if (bankgrouping == 'type' && dategrouping == 'monthly') {
+            return @Html.Raw(Json.Serialize(Model.MonthlyBankTypeSnapshots));
+        } else if (bankgrouping == 'all' && dategrouping == 'monthly') {
+            return @Html.Raw(Json.Serialize(Model.MonthlyAllSnapshots));
+        } else if (bankgrouping == 'bank' && dategrouping == 'yearly') {
+            return @Html.Raw(Json.Serialize(Model.YearlyBankSnapshots));
+        } else if (bankgrouping == 'type' && dategrouping == 'yearly') {
+            return @Html.Raw(Json.Serialize(Model.YearlyBankTypeSnapshots));
+        } else if (bankgrouping == 'all' && dategrouping == 'yearly') {
+            return @Html.Raw(Json.Serialize(Model.YearlyAllSnapshots));
+        }
+    }
+
+    function createTableCard(title) {
+        var h6 = document.createElement('h6');
+        h6.innerHTML = title;
+        h6.classList.add('m-0');
+        h6.classList.add('font-weight-bold');
+        h6.classList.add('text-primary');
+
+        var cardheader = document.createElement('div');
+        cardheader.classList.add('card-header');
+        cardheader.classList.add('py-3');
+        cardheader.appendChild(h6);
+
+        var emptydiv = document.createElement('div');
+
+        var formrow = document.createElement('div');
+        formrow.classList.add('form-row');
+
+        var cardbody = document.createElement('div');
+        cardbody.classList.add('card-body');
+        cardbody.appendChild(formrow);
+
+        var card = document.createElement('div');
+        card.classList.add('card');
+        card.classList.add('shadow');
+        card.classList.add('mb-4');
+        card.appendChild(cardheader);
+        card.appendChild(emptydiv);
+        card.appendChild(cardbody);
+
+        return card;
+    }
+
+    function createTable(tbl, snapshot, dategrouping) {
+        createHeaders(tbl, dategrouping);
+        createRows(tbl, snapshot, dategrouping);
+    }
+
+    function createRows(tbl, snapshotTbl, dategrouping) {
+        var format = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+        });
+
+        for (var i = 0; i < snapshotTbl.snapshots.length; i++) {
+            var snapshot = snapshotTbl.snapshots[i];
+            var row = tbl.insertRow();
+
+            addCell(row, snapshot.year);
+            
+            if (dategrouping == 'monthly') {
+                addCell(row, snapshot.monthName);
+            }
+
+            addCell(row, format.format(snapshot.amount));
+        }
+    }
+
+    function createHeaders(tbl, dategrouping) {
+        var thead = tbl.createTHead();
+        var hRow = thead.insertRow(0);
+
+        switch (dategrouping) {
+            case 'monthly':
+                addCell(hRow, "Year");
+                addCell(hRow, "Month");
+                break;
+            case 'yearly':
+                addCell(hRow, "Year");
+                break;
+        }
+
+        addCell(hRow, "Amount");
+    }
+
+    function removeAllChildNodes(parent) {
+        while (parent.firstChild) {
+            parent.removeChild(parent.firstChild);
+        }
+    }
+
+    function addCell(row, text) {
+        var cell = row.insertCell();
+        cell.innerHTML = text;
+    }
+</script>
+<style>
+    .radio-toolbar {
+        margin: 10px;
+    }
+
+        .radio-toolbar input[type="radio"] {
+            opacity: 0;
+            position: fixed;
+            width: 0;
+        }
+
+        .radio-toolbar label {
+            display: inline-block;
+            background-color: #ddd;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+            font-family: sans-serif, Arial;
+            font-size: 16px;
+            border: 2px solid #444;
+            border-radius: 4px;
+        }
+
+            .radio-toolbar label:hover {
+                background-color: #a6b9ef;
+                color: white;
+            }
+
+        .radio-toolbar input[type="radio"]:focus + label {
+            border: 2px dashed #d2dbf7;
+        }
+
+        .radio-toolbar input[type="radio"]:checked + label {
+            background-color: #4E73DF;
+            color: white;
+            border-color: #a6b9ef;
+        }
+
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>

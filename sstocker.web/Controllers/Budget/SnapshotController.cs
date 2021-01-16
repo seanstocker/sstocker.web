@@ -16,7 +16,7 @@ namespace sstocker.web.Controllers.Budget
             if (accountId == default)
                 return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
 
-            var model = new AddSnapshotModel(accountId);
+            var model = new AddSnapshotModel();
             model.SetBaseViewModel(accountId);
             return View(SettingsHelper.GetSnapshotControllerViewPath("AddSnapshot"), model);
         }
@@ -45,6 +45,17 @@ namespace sstocker.web.Controllers.Budget
 
             SnapshotRepository.AddSnapshot(accountId, bankId, bankTypeId, amountValue, dateValue);
             return Json(new { status = true, message = "Snapshot Added" });
+        }
+
+        public ActionResult SnapshotSummary()
+        {
+            var accountId = HttpContext.Session.Get<long>(SessionHelper.SessionKeyAccountId);
+            if (accountId == default)
+                return RedirectToAction("Login", "Account", new { id = LoginHelper.BudgetApp });
+
+            var model = new SnapshotSummaryModel(accountId);
+            model.SetBaseViewModel(accountId);
+            return View(SettingsHelper.GetSnapshotControllerViewPath("SnapshotSummary"), model);
         }
     }
 }

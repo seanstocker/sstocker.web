@@ -39,7 +39,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Spent (Today)</div>
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><a href="@Url.Action("SnapshotSummary", "Snapshot")">Spent (Today)</a></div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">$@Model.SpentToday.ToString("#,###,##0.00")</div>
                     </div>
                     <div class="col-auto">
@@ -56,7 +56,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Spent (This Week)</div>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1"><a href="@Url.Action("SnapshotSummary", "Snapshot")">Spent (This Week)</a></div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">$@Model.SpentThisWeek.ToString("#,###,##0.00")</div>
                     </div>
                     <div class="col-auto">
@@ -73,7 +73,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Spent (This Month)</div>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1"><a href="@Url.Action("SnapshotSummary", "Snapshot")">Spent (This Month)</a></div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">$@Model.SpentThisMonth.ToString("#,###,##0.00")</div>
                     </div>
                     <div class="col-auto">
@@ -90,7 +90,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Spent (This Year)</div>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1"><a href="@Url.Action("SnapshotSummary", "Snapshot")">Spent (This Year)</a></div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">$@Model.SpentThisYear.ToString("#,###,##0.00")</div>
                     </div>
                     <div class="col-auto">
