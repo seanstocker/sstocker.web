@@ -34,7 +34,7 @@ namespace sstocker.budget.ViewModels
                 switch (setting.ContextKey.ToUpperInvariant())
                 {
                     case SettingsHelper.CategorySettingKey:
-                        Categories.Single(c => c.Category.CategoryId == setting.ContextValue).Setting = setting.Data;
+                        Categories.Single(c => c.Category.CategoryId == long.Parse(setting.ContextValue)).Setting = setting.Data;
                         break;
                     default:
                         throw new Exception($"{setting.ContextKey} is not a valid settings categories.");

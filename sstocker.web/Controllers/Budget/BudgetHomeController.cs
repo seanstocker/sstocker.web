@@ -200,7 +200,7 @@ namespace sstocker.web.Controllers
 
                 var startDate = setting.Data.Duration.GetStartDate();
                 var endDate = setting.Data.Duration.GetEndDate();
-                var name = categories.Single(c => c.CategoryId == setting.ContextValue).Name;
+                var name = categories.Single(c => c.CategoryId == long.Parse(setting.ContextValue)).Name;
 
                 var categoryExpenses = expenses.Where(e => e.Category == name
                     && e.SpentDate >= startDate

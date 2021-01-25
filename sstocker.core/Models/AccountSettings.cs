@@ -30,7 +30,7 @@ namespace sstocker.core.Models
     public class AccountSetting<T>
     {
         public string ContextKey;
-        public long ContextValue;
+        public string ContextValue;
         public T Data;
     }
 }

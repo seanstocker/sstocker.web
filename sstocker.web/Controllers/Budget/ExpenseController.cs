@@ -172,6 +172,15 @@ namespace sstocker.web.Controllers
         {
             var expenses = ExpenseRepository.GetAccountExpenses(accountId);
             var hasSharedAccount = AccountHelper.HasSharedAccount(accountId);
+
+            if (timePeriod == ExpenseSummaryTimePeriod.Default)
+            {
+                var accountSetting = AccountRepository.GetAccountSettings<ExpenseSummaryTimePeriod>(accountId, "ExpenseSummaryTimePeriod");
+                timePeriod = accountSetting.Settings.Any(s => s.ContextValue == "DEFAULT")
+                    ? accountSetting.Settings.Single(s => s.ContextValue == "DEFAULT").Data
+                    : ExpenseSummaryTimePeriod.Today;
+            }
+
             var model = new ExpenseSummaryModel(expenses, timePeriod, hasSharedAccount);
             return model;
         }
@@ -215,7 +224,7 @@ namespace sstocker.web.Controllers
                 if (setting.Data.Amount <= 0)
                     continue;
 
-                model.AddCategoryTable(setting.Data.Duration, categories.Single(c => c.CategoryId == setting.ContextValue), setting.Data.Amount, expenses, sharedAccount);
+                model.AddCategoryTable(setting.Data.Duration, categories.Single(c => c.CategoryId == long.Parse(setting.ContextValue)), setting.Data.Amount, expenses, sharedAccount);
             }
 
             return model;

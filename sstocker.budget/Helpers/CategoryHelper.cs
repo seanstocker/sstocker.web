@@ -28,7 +28,7 @@ namespace sstocker.budget.Helpers
             foreach (var setting in settings.Settings)
             {
                 if (!setting.Data.IsActive)
-                    returnCategories.RemoveAll(c => c.CategoryId == setting.ContextValue);
+                    returnCategories.RemoveAll(c => c.CategoryId == long.Parse(setting.ContextValue));
             }
 
             return returnCategories;

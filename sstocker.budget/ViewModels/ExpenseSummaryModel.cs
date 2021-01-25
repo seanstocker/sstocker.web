@@ -18,7 +18,7 @@ namespace sstocker.budget.ViewModels
 
         public ExpenseSummaryModel(List<Expense> expenses, ExpenseSummaryTimePeriod timePeriod, bool hasSharedAccount)
         {
-            TimePeriod = timePeriod;
+            TimePeriod = timePeriod == ExpenseSummaryTimePeriod.Default ? ExpenseSummaryTimePeriod.Today : timePeriod;
             var min = expenses.Any() ? (DateTime?)expenses.Min(e => e.SpentDate) : null;
             var max = expenses.Any() ? (DateTime?)expenses.Max(e => e.SpentDate) : null;
             StartDate = timePeriod.GetStartDate(min);

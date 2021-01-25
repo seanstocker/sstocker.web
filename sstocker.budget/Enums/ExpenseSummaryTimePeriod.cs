@@ -4,6 +4,7 @@ namespace sstocker.budget.Enums
 {
     public enum ExpenseSummaryTimePeriod
     {
+        Default,
         Today,
         ThisWeek,
         Last7Days,
