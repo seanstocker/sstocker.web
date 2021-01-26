@@ -21,8 +21,8 @@ namespace sstocker.budget.ViewModels
             TimePeriod = timePeriod == ExpenseSummaryTimePeriod.Default ? ExpenseSummaryTimePeriod.Today : timePeriod;
             var min = expenses.Any() ? (DateTime?)expenses.Min(e => e.SpentDate) : null;
             var max = expenses.Any() ? (DateTime?)expenses.Max(e => e.SpentDate) : null;
-            StartDate = timePeriod.GetStartDate(min);
-            EndDate = timePeriod.GetEndDate(max);
+            StartDate = TimePeriod.GetStartDate(min);
+            EndDate = TimePeriod.GetEndDate(max);
             Expenses = expenses.Where(e => e.SpentDate >= StartDate && e.SpentDate <= EndDate.AddDays(1).AddSeconds(-1)).ToList();
             ColumnNames = new List<string> { "Store", "Category", "Amount", "SpentDate" };
             HasSharedAccount = hasSharedAccount;

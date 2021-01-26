@@ -105,7 +105,7 @@ WHERE s.AccountId = @Id
             return new AccountSettings<T>(accountId, result);
         }
 
-        public static void AddOrUpdateAccountSetting(long accountId, string contextKey, long contextValue, object data)
+        public static void AddOrUpdateAccountSetting(long accountId, string contextKey, string contextValue, object data)
         {
             var sql = @"
 IF EXISTS (SELECT * FROM Account.dbo.AccountSettings WHERE AccountId = @Id AND ContextKey = @ContextKey AND ContextValue = @ContextValue)

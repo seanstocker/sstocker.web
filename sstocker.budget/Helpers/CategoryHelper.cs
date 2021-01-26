@@ -1,6 +1,5 @@
 ﻿using sstocker.budget.Models;
 using sstocker.budget.Repositories;
-using sstocker.core.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +22,7 @@ namespace sstocker.budget.Helpers
             if (accountId <= 0)
                 return Categories;
 
-            var settings = AccountRepository.GetAccountSettings<CategorySetting>(accountId, SettingsHelper.CategorySettingKey);
+            var settings = SettingsHelper.GetCategorySettings(accountId);
             var returnCategories = Categories.ToList();
             foreach (var setting in settings.Settings)
             {

@@ -175,9 +175,9 @@ namespace sstocker.web.Controllers
 
             if (timePeriod == ExpenseSummaryTimePeriod.Default)
             {
-                var accountSetting = AccountRepository.GetAccountSettings<ExpenseSummaryTimePeriod>(accountId, "ExpenseSummaryTimePeriod");
-                timePeriod = accountSetting.Settings.Any(s => s.ContextValue == "DEFAULT")
-                    ? accountSetting.Settings.Single(s => s.ContextValue == "DEFAULT").Data
+                var accountSetting = SettingsHelper.GetExpenseSummarySettings(accountId);
+                timePeriod = accountSetting.Settings.Any(s => s.ContextValue == SettingsHelper.TimePeriodSettingValue)
+                    ? accountSetting.Settings.Single(s => s.ContextValue == SettingsHelper.TimePeriodSettingValue).Data
                     : ExpenseSummaryTimePeriod.Today;
             }
 
@@ -188,7 +188,7 @@ namespace sstocker.web.Controllers
         private SummaryModel GetSummaryModel(long accountId, SummaryTimePeriod timePeriod)
         {
             var expenses = ExpenseRepository.GetAccountExpenses(accountId);
-            var settings = AccountRepository.GetAccountSettings<CategorySetting>(accountId, SettingsHelper.CategorySettingKey);
+            var settings = SettingsHelper.GetCategorySettings(accountId);
             var model = new SummaryModel(timePeriod, expenses.Min(e => e.SpentDate), expenses.Max(e => e.SpentDate));
             expenses = expenses.Where(e => e.SpentDate >= model.StartDate && e.SpentDate <= model.EndDate.AddDays(1).AddSeconds(-1)).ToList();
 
@@ -213,7 +213,7 @@ namespace sstocker.web.Controllers
         {
             var categories = CategoryHelper.GetCategories();
             var expenses = ExpenseRepository.GetAccountExpenses(accountId);
-            var settings = AccountRepository.GetAccountSettings<CategorySetting>(accountId, SettingsHelper.CategorySettingKey);
+            var settings = SettingsHelper.GetCategorySettings(accountId);
 
             foreach (var setting in settings.Settings)
             {
