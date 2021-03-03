@@ -6,43 +6,67 @@
 }
 
 @model sstocker.budget.ViewModels.SnapshotSummaryModel
-<!-- DataTales Example -->
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">
-            Sort By
-        </h6>
-    </div>
-    <div>
-    </div>
-    <div class="card-body">
-        <div class="form-row">
-            <div class="radio-toolbar">
-                <input type="radio" id="monthlygrouping" name="dategroupings" value="monthly" onclick="tableCreate()" checked>
-                <label for="monthlygrouping">Monthly</label>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Sort By
+                    </h6>
+                </div>
+                <div>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="radio-toolbar">
+                            <input type="radio" id="monthlygrouping" name="dategroupings" value="monthly" onclick="tableCreate()" checked>
+                            <label for="monthlygrouping">Monthly</label>
 
-                <input type="radio" id="yearlygrouping" name="dategroupings" value="yearly" onclick="tableCreate()">
-                <label for="yearlygrouping">Yearly</label>
+                            <input type="radio" id="yearlygrouping" name="dategroupings" value="yearly" onclick="tableCreate()">
+                            <label for="yearlygrouping">Yearly</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="radio-toolbar">
+                            <input type="radio" id="bankgrouping" name="groupings" value="bank" onclick="tableCreate()" checked>
+                            <label for="bankgrouping">Bank</label>
+
+                            <input type="radio" id="typegrouping" name="groupings" value="type" onclick="tableCreate()">
+                            <label for="typegrouping">Type</label>
+
+                            <input type="radio" id="allgrouping" name="groupings" value="all" onclick="tableCreate()">
+                            <label for="allgrouping">All</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="form-row">
-            <div class="radio-toolbar">
-                <input type="radio" id="bankgrouping" name="groupings" value="bank" onclick="tableCreate()" checked>
-                <label for="bankgrouping">Bank</label>
-
-                <input type="radio" id="typegrouping" name="groupings" value="type" onclick="tableCreate()">
-                <label for="typegrouping">Type</label>
-
-                <input type="radio" id="allgrouping" name="groupings" value="all" onclick="tableCreate()">
-                <label for="allgrouping">All</label>
+        <div class="col-lg-6 mb-4">
+            <div class="card border-left-primary shadow py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col">
+                            <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">Total</div>
+                            <div class="h1 mb-0 font-weight-bold text-gray-800">@string.Format("{0:C2}", Model.SnapshotTotal)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-5x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="tableHolder">
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div id="tableHolder" class="row">
 
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -62,7 +86,7 @@
             var card = createTableCard(snapshot.title);
             var tbl = document.createElement('table');
             createTable(tbl, snapshots[i], dategrouping);
-            card.childNodes[2].appendChild(tbl);
+            card.childNodes[0].childNodes[2].appendChild(tbl);
             holder.appendChild(card);
         }
     }
@@ -112,7 +136,12 @@
         card.appendChild(emptydiv);
         card.appendChild(cardbody);
 
-        return card;
+        var cardHolder = document.createElement('div');
+        cardHolder.classList.add('col-lg-6');
+        cardHolder.classList.add('mb-4');
+        cardHolder.appendChild(card);
+
+        return cardHolder;
     }
 
     function createTable(tbl, snapshot, dategrouping) {
@@ -132,7 +161,7 @@
             var row = tbl.insertRow();
 
             addCell(row, snapshot.year);
-            
+
             if (dategrouping == 'monthly') {
                 addCell(row, snapshot.monthName);
             }

@@ -18,6 +18,8 @@ namespace sstocker.budget.ViewModels
         public List<SnapshotTable> YearlyBankTypeSnapshots;
         public List<SnapshotTable> YearlyAllSnapshots;
 
+        public decimal SnapshotTotal;
+
         public SnapshotSummaryModel(long accountId)
         {
             Snapshots = SnapshotRepository.GetAccountSnapshots(accountId).OrderByDescending(s => s.SnapShotDate).ToList();
@@ -81,6 +83,8 @@ namespace sstocker.budget.ViewModels
             YearlyBankSnapshots = tempYearlyBankSnapshots.GroupBy(s => s.Bank).Select(g => new SnapshotTable(g.Key, g.GroupBy(s => s.SnapShotDate.Year).Select(i => new TableRow { Month = 1, Year = i.Key, Amount = i.Sum(x => x.Amount) }))).OrderBy(o => o.Title).ToList();
             YearlyBankTypeSnapshots = tempYearlyBankTypeSnapshots.GroupBy(s => s.BankType).Select(g => new SnapshotTable(g.Key, g.GroupBy(s => s.SnapShotDate.Year).Select(i => new TableRow { Month = 1, Year = i.Key, Amount = i.Sum(x => x.Amount) }))).OrderBy(o => o.Title).ToList();
             YearlyAllSnapshots = tempYearlyAllSnapshots.GroupBy(s => new { s.Bank, s.BankType }).Select(g => new SnapshotTable($"{g.Key.Bank} - {g.Key.BankType}", g.GroupBy(s => s.SnapShotDate.Year).Select(i => new TableRow { Month = 1, Year = i.Key, Amount = i.Sum(x => x.Amount) }))).OrderBy(o => o.Title).ToList();
+
+            SnapshotTotal = Snapshots.Sum(s => s.Amount);
         }
 
         public class SnapshotTable
