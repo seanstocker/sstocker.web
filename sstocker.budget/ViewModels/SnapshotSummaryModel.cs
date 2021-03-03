@@ -84,7 +84,7 @@ namespace sstocker.budget.ViewModels
             YearlyBankTypeSnapshots = tempYearlyBankTypeSnapshots.GroupBy(s => s.BankType).Select(g => new SnapshotTable(g.Key, g.GroupBy(s => s.SnapShotDate.Year).Select(i => new TableRow { Month = 1, Year = i.Key, Amount = i.Sum(x => x.Amount) }))).OrderBy(o => o.Title).ToList();
             YearlyAllSnapshots = tempYearlyAllSnapshots.GroupBy(s => new { s.Bank, s.BankType }).Select(g => new SnapshotTable($"{g.Key.Bank} - {g.Key.BankType}", g.GroupBy(s => s.SnapShotDate.Year).Select(i => new TableRow { Month = 1, Year = i.Key, Amount = i.Sum(x => x.Amount) }))).OrderBy(o => o.Title).ToList();
 
-            SnapshotTotal = Snapshots.Sum(s => s.Amount);
+            SnapshotTotal = Snapshots.GroupBy(s => new { s.Bank, s.BankType }).Sum(s => s.OrderByDescending(i => i.SnapShotDate).First().Amount);
         }
 
         public class SnapshotTable
