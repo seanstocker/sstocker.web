@@ -75,12 +75,12 @@ namespace sstocker.budget.Helpers
             return BankTypes.Single(c => c.BankType == name).BankTypeId;
         }
 
-        public static void AddBankType(string name)
+        public static void AddBankType(string name, bool isDebt)
         {
             if (BankTypes.Any(c => c.BankType == name))
                 return;
 
-            BankRepository.CreateBankType(name);
+            BankRepository.CreateBankType(name, isDebt);
             BankTypes = BankRepository.GetAllBankTypes();
         }
 
@@ -89,10 +89,10 @@ namespace sstocker.budget.Helpers
             return GetBankTypeNames().Any(n => n == name);
         }
 
-        public static long GetOrAddBankTypeId(string name)
+        public static long GetOrAddBankTypeId(string name, bool isDebt = false)
         {
             if (!BankTypeExists(name))
-                AddBankType(name);
+                AddBankType(name, isDebt);
             return GetBankTypeId(name);
         }
     }

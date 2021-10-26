@@ -42,15 +42,16 @@ FROM Budget.dbo.BankType";
             return result;
         }
 
-        public static void CreateBankType(string bankType)
+        public static void CreateBankType(string bankType, bool isDebt)
         {
             var sql = @"
 INSERT INTO Budget.dbo.BankType
-VALUES (@BankType)";
+VALUES (@BankType, @IsDebt)";
 
             var p = new
             {
-                BankType = bankType
+                BankType = bankType,
+                IsDebt = isDebt
             };
 
             DatabaseHelper.Execute(sql, p);

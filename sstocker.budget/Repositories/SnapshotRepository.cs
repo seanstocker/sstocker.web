@@ -10,7 +10,7 @@ namespace sstocker.budget.Repositories
         public static List<Snapshot> GetAccountSnapshots(long accountId)
         {
             var sql = @"
-SELECT s.SnapShotId, s.AccountId, b.Name Bank, t.BankType BankType, s.Amount, s.SnapShotDate, eg.ExternalGuid
+SELECT s.SnapShotId, s.AccountId, b.Name Bank, t.BankType BankType, s.Amount, t.IsDebt, s.SnapShotDate, eg.ExternalGuid
 FROM Budget.dbo.SnapShot s
 	JOIN Budget.dbo.Bank b
 		ON s.BankId = b.BankId

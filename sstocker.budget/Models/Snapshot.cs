@@ -9,6 +9,7 @@ namespace sstocker.budget.Models
         public string Bank;
         public string BankType;
         public decimal Amount;
+        public bool IsDebt;
         public DateTime SnapShotDate;
         public Guid ExternalGuid;
     }

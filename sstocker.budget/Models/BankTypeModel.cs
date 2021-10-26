@@ -4,5 +4,6 @@
     {
         public long BankTypeId;
         public string BankType;
+        public bool IsDebt;
     }
 }

@@ -9,6 +9,51 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-6 mb-4">
+            <div class="card border-left-primary shadow py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col">
+                            <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">Total</div>
+                            <div class="h1 mb-0 font-weight-bold text-gray-800">$@string.Format("{0:0,0.00}", Model.SnapshotTotal)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-5x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card border-left-primary shadow py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col">
+                            <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">Total Without Mortgage</div>
+                            <div class="h1 mb-0 font-weight-bold text-gray-800">$@string.Format("{0:0,0.00}", Model.SnapshotTotalWithoutDebt)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-5x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card border-left-primary shadow py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col">
+                            <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">Total In Bank</div>
+                            <div class="h1 mb-0 font-weight-bold text-gray-800">$@string.Format("{0:0,0.00}", Model.SnapshotTotalInBank)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-5x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">
@@ -38,21 +83,6 @@
 
                             <input type="radio" id="allgrouping" name="groupings" value="all" onclick="tableCreate()">
                             <label for="allgrouping">All</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 mb-4">
-            <div class="card border-left-primary shadow py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col">
-                            <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">Total</div>
-                            <div class="h1 mb-0 font-weight-bold text-gray-800">$@string.Format("{0:0,0.00}", Model.SnapshotTotal)</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-5x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
