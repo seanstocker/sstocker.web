@@ -136,7 +136,9 @@ namespace sstocker.budget.ViewModels
             var sb = new StringBuilder();
 
             sb.Append($"'--{Type}--' + ");
-            sb.Append($"document.getElementById('{Name}_SendEmail').checked + ',' + ");
+            sb.Append($"document.getElementById('{Name}_SendEmail_Weekly').checked + ',' + ");
+            sb.Append($"document.getElementById('{Name}_SendEmail_Monthly').checked + ',' + ");
+            sb.Append($"document.getElementById('{Name}_SendEmail_Reminder').checked + ',' + ");
             sb.Append($"$('#{Name}_Email').val()");
 
             return sb.ToString();

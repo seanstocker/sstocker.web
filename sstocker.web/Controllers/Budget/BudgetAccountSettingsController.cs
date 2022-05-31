@@ -145,20 +145,22 @@ namespace sstocker.web.Controllers.Budget
             settingString = GetValidSettingString(settingString, "EMAIL");
             var split = settingString.Split(',');
 
-            if(split.Length != 2)
+            if(split.Length != 4)
             {
                 return null;
             }
 
-            if(!IsValidEmail(split[1]))
+            if(!IsValidEmail(split[3]))
             {
                 return null;
             }
 
             return new EmailSettings
             {
-                SendEmail = bool.Parse(split[0]),
-                Email = split[1]
+                SendWeeklyEmail = bool.Parse(split[0]),
+                SendMonthlyEmail = bool.Parse(split[1]),
+                SendReminderEmail = bool.Parse(split[2]),
+                Email = split[3]
             };
         }
 

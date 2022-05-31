@@ -3,6 +3,8 @@
     public class EmailSettings
     {
         public string Email;
-        public bool SendEmail;
+        public bool SendReminderEmail;
+        public bool SendWeeklyEmail;
+        public bool SendMonthlyEmail;
     }
 }

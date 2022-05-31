@@ -127,8 +127,26 @@
             <div class="form-row">
                 <div class="form-group">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" checked="@Model.Email.Setting.SendEmail" id="@(Model.Email.Name)_SendEmail" name="@(Model.Email.Name)_SendEmail" />
-                        <label class="custom-control-label" id="@(Model.Email.Name)_SendEmail_Label" name="@(Model.Email.Name)_SendEmail_Label" for="@(Model.Email.Name)_SendEmail">Send Email</label>
+                        <input type="checkbox" class="custom-control-input" checked="@Model.Email.Setting.SendWeeklyEmail" id="@(Model.Email.Name)_SendEmail_Weekly" name="@(Model.Email.Name)_SendEmail_Weekly" />
+                        <label class="custom-control-label" id="@(Model.Email.Name)_SendEmail_Weekly_Label" name="@(Model.Email.Name)_SendEmail_Weekly_Label" for="@(Model.Email.Name)_SendEmail_Weekly">Send Weekly Email</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" checked="@Model.Email.Setting.SendMonthlyEmail" id="@(Model.Email.Name)_SendEmail_Monthly" name="@(Model.Email.Name)_SendEmail_Monthly" />
+                        <label class="custom-control-label" id="@(Model.Email.Name)_SendEmail_Monthly_Label" name="@(Model.Email.Name)_SendEmail_Monthly_Label" for="@(Model.Email.Name)_SendEmail_Monthly">Send Monthly Email</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" checked="@Model.Email.Setting.SendReminderEmail" id="@(Model.Email.Name)_SendEmail_Reminder" name="@(Model.Email.Name)_SendEmail_Reminder" />
+                        <label class="custom-control-label" id="@(Model.Email.Name)_SendEmail_Reminder_Label" name="@(Model.Email.Name)_SendEmail_Reminder_Label" for="@(Model.Email.Name)_SendEmail_Reminder">Send Reminder Email</label>
                     </div>
                 </div>
             </div>
