@@ -15,15 +15,17 @@ namespace sstocker.budget.ViewModels
     {
         public List<AccountSettingsViewModelCategory> Categories;
         public AccountSettingsViewModelExpenseSummary ExpenseSummary;
+        public AccountSettingsViewModelEmail Email;
         public bool SharedAccountSettings;
         public bool HasSharedAccount;
 
-        public AccountSettingsViewModel(AccountSettings<CategorySetting> categorySettings, AccountSettings<ExpenseSummaryTimePeriod> expenseSummarySettings, bool sharedAccountSettings, bool hasSharedAccount)
+        public AccountSettingsViewModel(AccountSettings<CategorySetting> categorySettings, AccountSettings<ExpenseSummaryTimePeriod> expenseSummarySettings, AccountSettings<EmailSettings> emailSettings, bool sharedAccountSettings, bool hasSharedAccount)
         {
             SharedAccountSettings = sharedAccountSettings;
             HasSharedAccount = hasSharedAccount;
             Categories = SetupCategories(categorySettings);
             ExpenseSummary = SetupExpenseSummary(expenseSummarySettings);
+            Email = SetupEmail(emailSettings);
         }
 
         private List<AccountSettingsViewModelCategory> SetupCategories(AccountSettings<CategorySetting> settings)
@@ -46,6 +48,12 @@ namespace sstocker.budget.ViewModels
             return new AccountSettingsViewModelExpenseSummary(timePeriod ?? ExpenseSummaryTimePeriod.Default);
         }
 
+        private AccountSettingsViewModelEmail SetupEmail(AccountSettings<EmailSettings> settings)
+        {
+            var email = SettingsHelper.GetEmailSetting(settings);
+            return new AccountSettingsViewModelEmail(email ?? new EmailSettings());
+        }
+
         public string GetHtmlValues()
         {
             var htmlValues = new List<string>();
@@ -54,6 +62,8 @@ namespace sstocker.budget.ViewModels
                 htmlValues.Add(category.GetHtmlValues());
 
             htmlValues.Add(ExpenseSummary.GetHtmlValues());
+
+            htmlValues.Add(Email.GetHtmlValues());
 
             return string.Join(" + '|' + ", htmlValues);
         }
@@ -111,6 +121,25 @@ namespace sstocker.budget.ViewModels
         public override string GetHtmlValues()
         {
             return $"'--{Type}--' + document.querySelector('input[name=\"{Name}\"]:checked').value";
+        }
+    }
+
+    public class AccountSettingsViewModelEmail : AccountSettingViewModel<EmailSettings>
+    {
+        public AccountSettingsViewModelEmail(EmailSettings setting)
+            : base(setting, $"{SettingsHelper.EmailSettingKey}_{SettingsHelper.EmailSettingValue}", "EMAIL")
+        {
+        }
+
+        public override string GetHtmlValues()
+        {
+            var sb = new StringBuilder();
+
+            sb.Append($"'--{Type}--' + ");
+            sb.Append($"document.getElementById('{Name}_SendEmail').checked + ',' + ");
+            sb.Append($"$('#{Name}_Email').val()");
+
+            return sb.ToString();
         }
     }
 }

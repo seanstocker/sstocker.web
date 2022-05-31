@@ -115,6 +115,31 @@
         </div>
     </div>
 
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Email Settings
+            </h6>
+        </div>
+        <div>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" checked="@Model.Email.Setting.SendEmail" id="@(Model.Email.Name)_SendEmail" name="@(Model.Email.Name)_SendEmail" />
+                        <label class="custom-control-label" id="@(Model.Email.Name)_SendEmail_Label" name="@(Model.Email.Name)_SendEmail_Label" for="@(Model.Email.Name)_SendEmail">Send Email</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label id="@(Model.Email.Name)_Email_Label" name="@(Model.Email.Name)_Email_Label" for="@(Model.Email.Name)_Email">Email Address:</label><br />
+                <input type="text" value="@Model.Email.Setting.Email" id="@(Model.Email.Name)_Email" name="@(Model.Email.Name)_Email" />
+            </div>
+        </div>
+    </div>
+
     <br />
     <span class="btn btn-primary" style="width: 100%" onclick="Save()">Save</span>
     <br />

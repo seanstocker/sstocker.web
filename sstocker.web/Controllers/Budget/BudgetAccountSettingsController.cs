@@ -7,7 +7,9 @@ using sstocker.budget.ViewModels;
 using sstocker.core.Helpers;
 using sstocker.core.Repositories;
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace sstocker.web.Controllers.Budget
 {
@@ -27,7 +29,8 @@ namespace sstocker.web.Controllers.Budget
                 var sharedAccountId = AccountHelper.GetSharedAccountId(accountId);
                 var categorySettings = SettingsHelper.GetCategorySettings(sharedAccountId);
                 var expenseSummarySettings = SettingsHelper.GetExpenseSummarySettings(sharedAccountId);
-                var model = new AccountSettingsViewModel(categorySettings, expenseSummarySettings, true, hasSharedAccount);
+                var emailSettings = SettingsHelper.GetEmailSettings(sharedAccountId);
+                var model = new AccountSettingsViewModel(categorySettings, expenseSummarySettings, emailSettings, true, hasSharedAccount);
                 model.SetBaseViewModel(accountId);
                 return View(SettingsHelper.GetAccountControllerViewPath("BudgetAccountSettings"), model);
             }
@@ -35,7 +38,8 @@ namespace sstocker.web.Controllers.Budget
             {
                 var categorySettings = SettingsHelper.GetCategorySettings(accountId);
                 var expenseSummarySettings = SettingsHelper.GetExpenseSummarySettings(accountId);
-                var model = new AccountSettingsViewModel(categorySettings, expenseSummarySettings, false, hasSharedAccount);
+                var emailSettings = SettingsHelper.GetEmailSettings(accountId);
+                var model = new AccountSettingsViewModel(categorySettings, expenseSummarySettings, emailSettings, false, hasSharedAccount);
                 model.SetBaseViewModel(accountId);
                 return View(SettingsHelper.GetAccountControllerViewPath("BudgetAccountSettings"), model);
             }
@@ -69,12 +73,21 @@ namespace sstocker.web.Controllers.Budget
                     contextValue = SettingsHelper.TimePeriodSettingValue;
                     settingValue = ParseExpenseSummarySetting(setting);
                 }
+                else if (IsValidSettingString(setting, "EMAIL"))
+                {
+                    contextKey = SettingsHelper.EmailSettingKey;
+                    contextValue = SettingsHelper.EmailSettingValue;
+                    settingValue = ParseEmailSetting(setting);
+                }
                 else
                 {
                     throw new NotImplementedException();
                 }
 
-                AccountRepository.AddOrUpdateAccountSetting(savingAccountId, contextKey, contextValue, settingValue);
+                if (settingValue != null)
+                {
+                    AccountRepository.AddOrUpdateAccountSetting(savingAccountId, contextKey, contextValue, settingValue);
+                }
             }
 
             return Json(new { status = true, message = "Settings Saved" });
@@ -125,6 +138,72 @@ namespace sstocker.web.Controllers.Budget
         {
             settingString = GetValidSettingString(settingString, "EXPENSESUMMARYTIMEPERIOD");
             return (ExpenseSummaryTimePeriod)Enum.Parse(typeof(ExpenseSummaryTimePeriod), settingString);
+        }
+
+        private EmailSettings ParseEmailSetting(string settingString)
+        {
+            settingString = GetValidSettingString(settingString, "EMAIL");
+            var split = settingString.Split(',');
+
+            if(split.Length != 2)
+            {
+                return null;
+            }
+
+            if(!IsValidEmail(split[1]))
+            {
+                return null;
+            }
+
+            return new EmailSettings
+            {
+                SendEmail = bool.Parse(split[0]),
+                Email = split[1]
+            };
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                // Normalize the domain
+                email = Regex.Replace(email, @"(@)(.+)$", DomainMapper,
+                                      RegexOptions.None, TimeSpan.FromMilliseconds(200));
+
+                // Examines the domain part of the email and normalizes it.
+                string DomainMapper(Match match)
+                {
+                    // Use IdnMapping class to convert Unicode domain names.
+                    var idn = new IdnMapping();
+
+                    // Pull out and process domain name (throws ArgumentException on invalid)
+                    string domainName = idn.GetAscii(match.Groups[2].Value);
+
+                    return match.Groups[1].Value + domainName;
+                }
+            }
+            catch (RegexMatchTimeoutException e)
+            {
+                return false;
+            }
+            catch (ArgumentException e)
+            {
+                return false;
+            }
+
+            try
+            {
+                return Regex.IsMatch(email,
+                    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false;
+            }
         }
     }
 }

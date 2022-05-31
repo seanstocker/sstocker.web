@@ -10,6 +10,8 @@ namespace sstocker.budget.Helpers
     {
         public const string CategorySettingKey = "CATEGORY";
         public const string ExpenseSummarySettingKey = "EXPENSESUMMARY";
+        public const string EmailSettingKey = "EMAIL";
+        public const string EmailSettingValue = "EMAIL";
         public const string TimePeriodSettingValue = "TIMEPERIOD";
         public const string ControllerRoute = "Budget/[controller]/[action]";
 
@@ -53,6 +55,11 @@ namespace sstocker.budget.Helpers
             return AccountRepository.GetAccountSettings<ExpenseSummaryTimePeriod>(accountId, ExpenseSummarySettingKey);
         }
 
+        public static AccountSettings<EmailSettings> GetEmailSettings(long accountId)
+        {
+            return AccountRepository.GetAccountSettings<EmailSettings>(accountId, EmailSettingKey);
+        }
+
         public static ExpenseSummaryTimePeriod? GetTimePeriod(long accountId)
         {
             return GetTimePeriod(GetExpenseSummarySettings(accountId));
@@ -61,6 +68,11 @@ namespace sstocker.budget.Helpers
         public static ExpenseSummaryTimePeriod? GetTimePeriod(AccountSettings<ExpenseSummaryTimePeriod> settings)
         {
             return settings.Settings.SingleOrDefault(s => s.ContextValue == TimePeriodSettingValue)?.Data;
+        }
+
+        public static EmailSettings GetEmailSetting(AccountSettings<EmailSettings> settings)
+        {
+            return settings.Settings.SingleOrDefault(s => s.ContextValue == EmailSettingValue)?.Data;
         }
     }
 }
