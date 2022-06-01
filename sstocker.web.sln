@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sstocker.budget", "sstocker
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sstocker.core", "sstocker.core\sstocker.core.csproj", "{FF3B5915-7705-48F0-B0FC-22D571E6ACC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sstocker.wishlist", "sstocker.wishlist\sstocker.wishlist.csproj", "{BA8149B3-E132-4DB2-AD0E-D24FE7271A07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sstocker.wishlist", "sstocker.wishlist\sstocker.wishlist.csproj", "{BA8149B3-E132-4DB2-AD0E-D24FE7271A07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sstocker.hangfire", "sstocker.hangfire\sstocker.hangfire.csproj", "{CD04DA84-5C96-4EB9-82FE-5651C75FC005}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{BA8149B3-E132-4DB2-AD0E-D24FE7271A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA8149B3-E132-4DB2-AD0E-D24FE7271A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA8149B3-E132-4DB2-AD0E-D24FE7271A07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD04DA84-5C96-4EB9-82FE-5651C75FC005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD04DA84-5C96-4EB9-82FE-5651C75FC005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD04DA84-5C96-4EB9-82FE-5651C75FC005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD04DA84-5C96-4EB9-82FE-5651C75FC005}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

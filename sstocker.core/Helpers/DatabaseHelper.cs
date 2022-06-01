@@ -50,12 +50,17 @@ namespace sstocker.core.Helpers
             }
         }
 
-        private static IDbConnection CreateConnection()
+        public static string GetConnectionString()
         {
             var server = ConfigurationHelper.GetConfiguration("SqlServer");
             var user = ConfigurationHelper.GetConfiguration("SqlUser");
             var password = ConfigurationHelper.GetConfiguration("SqlPassword");
-            var connection = new SqlConnection($"Server={server};User={user};Password={password};");
+            return $"Server={server};User={user};Password={password};";
+        }
+
+        private static IDbConnection CreateConnection()
+        {
+            var connection = new SqlConnection(GetConnectionString());
             return connection;
         }
     }

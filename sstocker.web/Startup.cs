@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using sstocker.core.Helpers;
+using sstocker.hangfire;
 
 namespace sstocker.web
 {
@@ -20,6 +21,8 @@ namespace sstocker.web
             services.AddMvc();
             services.AddDistributedMemoryCache();
             services.AddSession();
+
+            HangfireSetup.AddServer(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +39,9 @@ namespace sstocker.web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            HangfireSetup.AddDashboard(app);
+            HangfireJobQueue.EnqueueJob();
         }
     }
 }
