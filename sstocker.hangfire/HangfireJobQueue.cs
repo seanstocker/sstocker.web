@@ -13,7 +13,7 @@ namespace sstocker.hangfire
         public const string MonthlyEmailId = "monthly";
         public const string ReminderEmailId = "reminder";
 
-        private const int DefaultEmailSendHour = 18;
+        private const int DefaultEmailSendHour = 23;
         private const int DefaultMonthlyEmailSendDay = 1;
         private const DayOfWeek DefaultWeeklyEmailSendDayOfWeek = DayOfWeek.Saturday;
 
