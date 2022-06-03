@@ -15,7 +15,7 @@ namespace sstocker.hangfire
 
         private const int DefaultEmailSendHour = 23;
         private const int DefaultMonthlyEmailSendDay = 1;
-        private const DayOfWeek DefaultWeeklyEmailSendDayOfWeek = DayOfWeek.Saturday;
+        private const DayOfWeek DefaultWeeklyEmailSendDayOfWeek = DayOfWeek.Sunday;
 
         public static void SetupWebEmailQueue()
         {

@@ -67,6 +67,9 @@ namespace sstocker.core.Helpers
                     case ".gif":
                         contentType = MediaTypeNames.Image.Gif;
                         break;
+                    case ".png":
+                        contentType = "image/png";
+                        break;
                     default:
                         throw new Exception($"Unrecognized extension type: {Path.GetExtension(image.Item2)}");
                 }

@@ -9,16 +9,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="EmailHtml\images\banner.jpg">
+    <None Update="EmailHtml\Reminder\images\reminder-banner.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="EmailHtml\MonthlyEmail.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="EmailHtml\WeeklyEmail.html">
+    <None Update="EmailHtml\Weekly\images\weekly-header background.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="EmailHtml\ReminderEmail.html">
+    <None Update="EmailHtml\Weekly\images\weekly-banner.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailHtml\Weekly\images\weekly-body background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailHtml\Weekly\WeeklyEmail.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailHtml\Reminder\ReminderEmail.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
