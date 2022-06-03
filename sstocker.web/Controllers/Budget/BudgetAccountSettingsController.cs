@@ -6,6 +6,7 @@ using sstocker.budget.Models;
 using sstocker.budget.ViewModels;
 using sstocker.core.Helpers;
 using sstocker.core.Repositories;
+using sstocker.hangfire;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -89,6 +90,8 @@ namespace sstocker.web.Controllers.Budget
                     AccountRepository.AddOrUpdateAccountSetting(savingAccountId, contextKey, contextValue, settingValue);
                 }
             }
+
+            HangfireJobQueue.RefreshAccountWebEmailQueue(savingAccountId);
 
             return Json(new { status = true, message = "Settings Saved" });
         }

@@ -41,7 +41,7 @@ namespace sstocker.web
             });
 
             HangfireSetup.AddDashboard(app);
-            HangfireJobQueue.EnqueueJob();
+            HangfireJobQueue.SetupWebEmailQueue();
         }
     }
 }

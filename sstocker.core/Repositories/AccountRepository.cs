@@ -2,11 +2,21 @@
 using sstocker.core.Models;
 using sstocker.core.Helpers;
 using System;
+using System.Collections.Generic;
 
 namespace sstocker.core.Repositories
 {
     public static class AccountRepository
     {
+        public static IList<int> GetAllAccounts()
+        {
+            var sql = @"
+SELECT a.AccountId
+FROM Account.dbo.Account a";
+
+            return DatabaseHelper.Query<int>(sql);
+        }
+
         public static AccountWithPassword GetAccountWithPassword(string username)
         {
             var sql = @"

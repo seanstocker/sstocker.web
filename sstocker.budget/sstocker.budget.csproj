@@ -8,4 +8,16 @@
     <ProjectReference Include="..\sstocker.core\sstocker.core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="EmailHtml\MonthlyEmail.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailHtml\WeeklyEmail.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailHtml\ReminderEmail.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

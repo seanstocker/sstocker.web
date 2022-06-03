@@ -29,7 +29,15 @@ namespace sstocker.hangfire
                     QueuePollInterval = TimeSpan.Zero,
                     UseRecommendedIsolationLevel = true
                 }));
-            services.AddHangfireServer();
+            services.AddHangfireServer(options =>
+            {
+                options.Queues = new[] {
+                    "default",
+                    HangfireJobQueue.WeeklyEmailId,
+                    HangfireJobQueue.MonthlyEmailId,
+                    HangfireJobQueue.ReminderEmailId 
+                };
+            });
         }
 
         public static void AddDashboard(IApplicationBuilder app)

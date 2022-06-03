@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\sstocker.budget\sstocker.budget.csproj" />
     <ProjectReference Include="..\sstocker.core\sstocker.core.csproj" />
   </ItemGroup>
 
