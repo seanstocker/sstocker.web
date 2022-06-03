@@ -9,6 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="EmailHtml\images\banner.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="EmailHtml\MonthlyEmail.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

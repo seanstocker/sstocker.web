@@ -1,17 +1,30 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 
 namespace sstocker.core.Helpers
 {
     public static class EmailHelper
     {
-        public static void SendEmail(string toEmail, string toEmailDisplayName, string subject, string body)
+        public static void SendEmail(string toEmail, string toEmailDisplayName, string subject, string body, List<(string, string)> images)
         {
             var mailMessage = new MailMessage(GetFromMailAddress(), new MailAddress(toEmail, toEmailDisplayName));
             mailMessage.Subject = subject;
-            mailMessage.Body = body;
             mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
             mailMessage.IsBodyHtml = true;
+
+            if (images != null && images.Any())
+            {
+                mailMessage.AlternateViews.Add(GetView(body, images));
+            }
+            else
+            {
+                mailMessage.Body = body;
+            }
 
             GetSmtpClient().Send(mailMessage);
         }
@@ -35,6 +48,35 @@ namespace sstocker.core.Helpers
                 EnableSsl = true,
             };
             return smtpClient;
+        }
+
+        private static AlternateView GetView(string body, List<(string, string)> images)
+        {
+            var av = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
+
+            foreach (var image in images)
+            {
+                string contentType;
+
+                switch (Path.GetExtension(image.Item2))
+                {
+                    case ".jpg":
+                    case ".jpeg":
+                        contentType = MediaTypeNames.Image.Jpeg;
+                        break;
+                    case ".gif":
+                        contentType = MediaTypeNames.Image.Gif;
+                        break;
+                    default:
+                        throw new Exception($"Unrecognized extension type: {Path.GetExtension(image.Item2)}");
+                }
+
+                var res = new LinkedResource(image.Item2, contentType);
+                res.ContentId = image.Item1;
+                av.LinkedResources.Add(res);
+            }
+
+            return av;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using sstocker.core.Helpers;
+﻿using sstocker.budget.Repositories;
+using sstocker.core.Helpers;
 using sstocker.core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,15 @@ namespace sstocker.budget.Helpers
         {
             var setting = SettingsHelper.GetEmailSetting(SettingsHelper.GetEmailSettings(accountId));
 
-            var htmlFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "WeeklyEmail.html", SearchOption.AllDirectories);
-            var html = File.ReadAllText(htmlFiles.Single());
+            var expenses = ExpenseRepository.GetAccountExpenses(accountId).Where(e => e.SpentDate.Date < DateTime.Today && e.SpentDate.Date >= DateTime.Today.AddDays(-7));
+
+            var html = File.ReadAllText(GetFilePath("WeeklyEmail.html"));
             html = ReplaceTags(html, new List<(string, string)> { });
+            var images = new List<(string, string)> { };
 
             if (setting != null && setting.SendWeeklyEmail)
             {
-                SendEmail(accountId, setting.Email, "Weekly Email", html);
+                SendEmail(accountId, setting.Email, "Weekly Email", html, images);
             }
         }
 
@@ -28,13 +31,13 @@ namespace sstocker.budget.Helpers
         {
             var setting = SettingsHelper.GetEmailSetting(SettingsHelper.GetEmailSettings(accountId));
 
-            var htmlFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "MonthlyEmail.html", SearchOption.AllDirectories);
-            var html = File.ReadAllText(htmlFiles.Single());
+            var html = File.ReadAllText(GetFilePath("MonthlyEmail.html"));
             html = ReplaceTags(html, new List<(string, string)> { });
+            var images = new List<(string, string)> { };
 
             if (setting != null && setting.SendMonthlyEmail)
             {
-                SendEmail(accountId, setting.Email, "Monthly Email", html);
+                SendEmail(accountId, setting.Email, "Monthly Email", html, images);
             }
         }
 
@@ -42,23 +45,35 @@ namespace sstocker.budget.Helpers
         {
             var setting = SettingsHelper.GetEmailSetting(SettingsHelper.GetEmailSettings(accountId));
 
-            var htmlFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "ReminderEmail.html", SearchOption.AllDirectories);
-            var html = File.ReadAllText(htmlFiles.Single());
+            var expenses = ExpenseRepository.GetAccountExpenses(accountId);
+
+            if(expenses.Any(e=>e.SpentDate.Date == DateTime.Today))
+            {
+                Console.WriteLine("No need for reminder email.");
+                return;
+            }
+
+            var html = File.ReadAllText(GetFilePath("ReminderEmail.html"));
             html = ReplaceTags(html, new List<(string, string)>
             {
                 ("Date", DateTime.Today.ToShortDateString())
             });
 
+            var images = new List<(string, string)>
+            {
+                ("banner", GetFilePath("banner.jpg"))
+            };
+
             if (setting != null && setting.SendReminderEmail)
             {
-                SendEmail(accountId, setting.Email, "Reminder", html);
+                SendEmail(accountId, setting.Email, "Reminder", html, images);
             }
         }
 
-        private void SendEmail(long accountId, string email, string subject, string bodyHtml)
+        private void SendEmail(long accountId, string email, string subject, string bodyHtml, List<(string, string)> images)
         {
             var account = AccountRepository.GetAccount(accountId);
-            EmailHelper.SendEmail(email, account.Name, subject, bodyHtml);
+            EmailHelper.SendEmail(email, account.Name, subject, bodyHtml, images);
         }
 
         private string ReplaceTags(string html, IList<(string, string)> values)
@@ -74,6 +89,12 @@ namespace sstocker.budget.Helpers
             }
 
             return html;
+        }
+
+        private string GetFilePath(string name)
+        {
+            var files = Directory.GetFiles(Directory.GetCurrentDirectory(), name, SearchOption.AllDirectories);
+            return files.Single();
         }
     }
 }
