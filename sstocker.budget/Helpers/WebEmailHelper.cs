@@ -1,12 +1,11 @@
-﻿using sstocker.budget.Repositories;
+﻿using QuickChart;
+using sstocker.budget.Repositories;
 using sstocker.core.Helpers;
 using sstocker.core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace sstocker.budget.Helpers
@@ -47,13 +46,13 @@ namespace sstocker.budget.Helpers
 
             var charts = new List<(string, string)>
             {
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Monday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "ff5b74"), "piemon", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Tuesday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "8b0e8b"), "pietue", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Wednesday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "d6a1ff"), "piewed", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Thursday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "ff5b74"), "piethu", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Friday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "8b0e8b"), "piefri", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Saturday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "d6a1ff"), "piesat", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Sunday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "ff5b74"), "piesun", $"weekly-{accountId}"),
+                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Monday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#ff5b74"), "piemon", $"weekly-{accountId}"),
+                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Tuesday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#8b0e8b"), "pietue", $"weekly-{accountId}"),
+                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Wednesday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#d6a1ff"), "piewed", $"weekly-{accountId}"),
+                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Thursday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#ff5b74"), "piethu", $"weekly-{accountId}"),
+                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Friday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#8b0e8b"), "piefri", $"weekly-{accountId}"),
+                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Saturday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#d6a1ff"), "piesat", $"weekly-{accountId}"),
+                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Sunday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#ff5b74"), "piesun", $"weekly-{accountId}"),
                 CreateChart(PieChart(expenses.GroupBy(e => e.Category).Select(g => (g.Key, (int)g.Sum(x => x.Amount)))), "piecategory", $"weekly-{accountId}")
             };
 
@@ -108,7 +107,7 @@ namespace sstocker.budget.Helpers
 
             var images = new List<(string, string)>
             {
-                ("banner", GetFilePath("reminder-banner.jpg"))
+                ("banner", GetFilePath("reminder-banner.png"))
             };
 
             if (setting != null && setting.SendReminderEmail)
@@ -144,7 +143,7 @@ namespace sstocker.budget.Helpers
             return files.Single();
         }
 
-        private (string, string) CreateChart(string url, string fileName, string folderName)
+        private (string, string) CreateChart(Chart chart, string fileName, string folderName)
         {
             if(!Directory.Exists(folderName))
             {
@@ -153,10 +152,7 @@ namespace sstocker.budget.Helpers
 
             var path = $"{folderName}/{fileName}.png";
 
-            using (WebClient webClient = new WebClient())
-            {
-                webClient.DownloadFile(url, path);
-            }
+            chart.ToFile(path);
 
             return (fileName, Path.GetFullPath(path));
         }
@@ -176,18 +172,45 @@ namespace sstocker.budget.Helpers
             }
         }
 
-        private string RadialGauge(int percentage, string color)
+        private Chart RadialGauge(int percentage, string color)
         {
-            var url = "https://quickchart.io/chart?c={%20type:%20%27radialGauge%27,%20data:%20{%20datasets:%20[{%20data:%20[{percentage}],%20backgroundColor:%27%23{hex}%27%20}]%20}%20}";
-            return url.Replace("{percentage}", percentage.ToString()).Replace("{hex}", color);
+            Chart chart = new Chart();
+
+            chart.Config = $@"
+{{
+  type: 'radialGauge',
+  data: {{
+    datasets: [{{
+      data: [{percentage}],
+      backgroundColor: ""{color}""
+    }}]
+  }}
+}}
+";
+
+            return chart;
         }
 
-        private string PieChart(IEnumerable<(string, int)> data)
+        private Chart PieChart(IEnumerable<(string, int)> data)
         {
-            var labels = string.Join("%2C", data.Select(d => $"%27{d.Item1}%27"));
-            var dataSet = string.Join("%2C", data.Select(d => $"{d.Item2}"));
-            var url = "https://quickchart.io/chart?c=%7B%0A%20%20type%3A%20%27pie%27%2C%0A%20%20data%3A%20%7B%0A%20%20%20%20labels%3A%20%5B{labels}%5D%2C%0A%20%20%20%20datasets%3A%20%5B%7B%0A%20%20%20%20%20%20data%3A%20%5B{dataset}%5D%0A%20%20%20%20%7D%5D%0A%20%20%7D%0A%7D%0A";
-            return url.Replace("{labels}", labels).Replace("{dataset}", dataSet);
+            Chart chart = new Chart();
+
+            var labels = string.Join(",", data.Select(d => $"'{d.Item1}'"));
+            var dataSet = string.Join(",", data.Select(d => $"{d.Item2}"));
+
+            chart.Config = $@"
+{{
+  type: 'pie',
+  data: {{
+    labels: [{labels}],
+    datasets: [{{
+      data: [{dataSet}]
+    }}]
+  }}
+}}
+";
+
+            return chart;
         }
     }
 }

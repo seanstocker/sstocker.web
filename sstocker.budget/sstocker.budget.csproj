@@ -5,11 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="QuickChart" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\sstocker.core\sstocker.core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="EmailHtml\Reminder\images\reminder-banner.jpg">
+    <None Update="EmailHtml\Reminder\images\banner.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="EmailHtml\MonthlyEmail.html">
