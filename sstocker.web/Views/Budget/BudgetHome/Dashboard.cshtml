@@ -167,6 +167,23 @@
 
 <!-- Content Row -->
 <div class="row">
+
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Expenses by Day</h6>
+            </div>
+            <div class="card-body">
+                <div id="chartDiv" style="max-width: 660px;height: 480px;margin: 0px auto">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Content Row -->
+<div class="row">
     <div class="col-lg-12 mb-4">
         <!-- Project Card Example -->
         <div class="card shadow mb-4">
@@ -246,10 +263,14 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
+<script type="text/javascript" src="https://code.jscharting.com/latest/modules/types.js"></script>
 <script>
+    var chart;
     $(document).ready(function () {
         createLineChart();
         createPieChart();
+        createCalendarChart();
     });
 
     $('#addTransferModal').on('show.bs.modal', function (event) {
@@ -500,5 +521,115 @@
             s[1] += new Array(prec - s[1].length + 1).join('0');
         }
         return s.join(dec);
+    }
+
+    function createCalendarChart() {
+        var data = JSC.csv2Json(@Json.Serialize(Model.CalendarModel));
+
+        var dict = {};
+        data.forEach(element => dict[element[0]] = element[2]);
+        var max = Math.max.apply(Math, data.map(o => o[1]));
+
+        // JS 
+        chart = JSC.chart('chartDiv', {
+            debug: true,
+            type: 'calendar month solid',
+            calendar_initial: new Date().toLocaleDateString(),
+            data: data,
+            legend: {
+                title_label: {
+                    text: '<b>Select Month</b>',
+                    align: 'right',
+                    style: { fontSize: '15px' }
+                },
+                defaultEntry: {
+                    style: { fontSize: '13px' },
+                    states_hidden_color: '#a5a5a5'
+                },
+                reversed: true
+            },
+            palette: {
+                colors: [
+                    '#1a9850',
+                    '#66bd63',
+                    '#a6d96a',
+                    '#d9ef8b',
+                    '#fee08b',
+                    '#fdae61',
+                    '#f46d43',
+                    '#d73027'
+                ],
+                colorBar_axis: { scale_interval: Math.ceil(max / 3) }
+            },
+            calendar: {
+                defaultEdgePoint: {
+                    mouseTracking: false,
+                    label_visible: false
+                },
+                defaultEmptyPoint: {
+                    outline_width: 0,
+                    hatch: { style: 'none' },
+                    opacity: 0.5,
+                    legendEntry_visible: false
+                }
+            },
+            yAxis_visible: false,
+            defaultPoint: {
+                opacity: 0.00001,
+                focusGlow: false,
+                label: {
+                    color: '#424242',
+                    verticalAlign: 'top',
+                    text: function (p) {
+                        return makeLabels(p,dict);
+                    }
+                },
+                outline_width: 0,
+                tooltip:
+                    '<b>{%date:date D}</b><br> $%zValue spent'
+            },
+            defaultSeries_shape_innerPadding: 0.04,
+            toolbar_visible: false
+        });
+    }
+
+    function makeLabels(p,dict) {
+        var salesGoal = dict[p.replaceTokens('%date').replaceAll(',', '')];
+
+        // The circle circular gauge is created with a pie with two points, one with a color and a gray one. 
+        // On top a circle icon to clip the middle, and a centered label on top of that. 
+        // The <absolute> tag allows stacking items this way. 
+
+        var value = '$%zValue';
+
+        if (p.replaceTokens('%zValue') == '') {
+            value = '';
+        }
+
+        if (p.replaceTokens('%zValue') < salesGoal) {
+            return (
+                '<span style="align:right; color:#757575; font-size:11px">%name</span><br>' +
+                '<absolute><chart pie data=' +
+                p.replaceTokens('%zValue') +
+                ',' +
+                (salesGoal - p.replaceTokens('%zValue')) +
+                ' size=42 colors=,' +
+                p.replaceTokens('%color') +
+                ',#F5F5F5 align=center verticalAlign=middle>' +
+                '<icon name=system/default/circle size=30 color=white margin_left=10 align=center verticalAlign=middle><span style="width:50px; align:center;"><b>' + value + '</b></span></absolute>'
+            );
+        } else {
+            return (
+                '<span style="align:right; color:#757575; font-size:11px">%name</span><br>' +
+                '<absolute><chart pie data=' +
+                p.replaceTokens('%zValue') +
+                ',1 size=42 colors=,' +
+                p.replaceTokens('%color') +
+                ',' +
+                p.replaceTokens('%color') +
+                ' align=center verticalAlign=middle>' +
+                '<icon name=system/default/circle size=30 color=white margin_left=10 align=center verticalAlign=middle><span style="width:50px; align:center;"><b>' + value + '</b></span></absolute>'
+            );
+        }
     }
 </script>

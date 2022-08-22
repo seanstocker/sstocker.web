@@ -17,6 +17,7 @@ namespace sstocker.budget.ViewModels
         public ChartJSChartModel PieChart;
         public List<BudgetOverview> BudgetOverviewList;
         public SharedDashboardModel Shared;
+        public string CalendarModel;
 
         public DashboardModel()
         {
@@ -27,6 +28,7 @@ namespace sstocker.budget.ViewModels
             PieChart = new ChartJSChartModel();
             BudgetOverviewList = new List<BudgetOverview>();
             Shared = new SharedDashboardModel();
+            CalendarModel = "";
         }
 
         public string GetPrimaryColor(int location)

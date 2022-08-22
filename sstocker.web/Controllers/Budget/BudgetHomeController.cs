@@ -9,6 +9,7 @@ using sstocker.core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace sstocker.web.Controllers
 {
@@ -73,6 +74,8 @@ namespace sstocker.web.Controllers
             var income = sharedDashboard
                 ? IncomeRepository.GetAccountIncome(sharedAccountId.GetValueOrDefault())
                 : IncomeRepository.GetAccountIncome(accountId);
+
+            model.CalendarModel = GetCalendarModelData(expenses, new DateTime(DateTime.Today.AddYears(-1).Year, DateTime.Today.AddYears(-1).AddMonths(1).Month, 1));
 
             model.SpentToday = GetTotalSpentAmount(expenses, ExpenseSummaryTimePeriod.Today);
             model.SpentThisWeek = GetTotalSpentAmount(expenses, ExpenseSummaryTimePeriod.ThisWeek);
@@ -311,6 +314,19 @@ namespace sstocker.web.Controllers
             }
 
             return expenses;
+        }
+
+        private string GetCalendarModelData(List<Expense> expenses, DateTime since)
+        {
+            var max = expenses.Where(e => e.SpentDate >= since).Select(e => e.Amount).Max();
+            var sb = new StringBuilder();
+
+            foreach (var expense in expenses.Where(e => e.SpentDate >= since))
+            {
+                sb.AppendLine($"{expense.SpentDate.ToString("M/d/yyyy")},{expense.Amount},{max}");
+            }
+
+            return sb.ToString();
         }
     }
 }
