@@ -41,20 +41,16 @@ namespace sstocker.budget.Helpers
                 ("PercentThursday", $"{expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Thursday).Sum(e=>e.Amount):C}"),
                 ("PercentFriday", $"{expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Friday).Sum(e=>e.Amount):C}"),
                 ("PercentSaturday", $"{expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Saturday).Sum(e=>e.Amount):C}"),
-                ("PercentSunday", $"{expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Sunday).Sum(e=>e.Amount):C}")
+                ("PercentSunday", $"{expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Sunday).Sum(e=>e.Amount):C}"),
+                ("piemon", GetChartUrl(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Monday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#ff5b74"))),
+                ("pietue", GetChartUrl(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Tuesday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#8b0e8b"))),
+                ("piewed", GetChartUrl(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Wednesday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#d6a1ff"))),
+                ("piethu", GetChartUrl(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Thursday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#ff5b74"))),
+                ("piefri", GetChartUrl(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Friday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#8b0e8b"))),
+                ("piesat", GetChartUrl(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Saturday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#d6a1ff"))),
+                ("piesun", GetChartUrl(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Sunday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#ff5b74"))),
+                ("piecategory", GetChartUrl(PieChart(expenses.GroupBy(e => e.Category).Select(g => (g.Key, (int)g.Sum(x => x.Amount))))))
             });
-
-            var charts = new List<(string, string)>
-            {
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Monday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#ff5b74"), "piemon", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Tuesday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#8b0e8b"), "pietue", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Wednesday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#d6a1ff"), "piewed", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Thursday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#ff5b74"), "piethu", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Friday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#8b0e8b"), "piefri", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Saturday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#d6a1ff"), "piesat", $"weekly-{accountId}"),
-                CreateChart(RadialGauge((int)Math.Round(expenses.Where(e=>e.SpentDate.DayOfWeek == DayOfWeek.Sunday).Sum(e=>e.Amount)/expenses.Sum(e=>e.Amount)*100), "#ff5b74"), "piesun", $"weekly-{accountId}"),
-                CreateChart(PieChart(expenses.GroupBy(e => e.Category).Select(g => (g.Key, (int)g.Sum(x => x.Amount)))), "piecategory", $"weekly-{accountId}")
-            };
 
             var images = new List<(string, string)>
             {
@@ -62,14 +58,11 @@ namespace sstocker.budget.Helpers
                 ("banner", GetFilePath("weekly-banner.png")),
                 ("bodybackground", GetFilePath("weekly-body background.png"))
             };
-            images.AddRange(charts);
 
             if (setting != null && setting.SendWeeklyEmail)
             {
                 SendEmail(accountId, setting.Email, "Weekly Email", html, images);
             }
-
-            DeleteCharts(charts);
         }
 
         public void SendMonthlyEmail(long accountId)
@@ -118,6 +111,8 @@ namespace sstocker.budget.Helpers
 
         private void SendEmail(long accountId, string email, string subject, string bodyHtml, List<(string, string)> images)
         {
+            // Don't send any emails before fixing email helper
+            return;
             var account = AccountRepository.GetAccount(accountId);
             EmailHelper.SendEmail(email, account.Name, subject, bodyHtml, images);
         }
@@ -141,35 +136,6 @@ namespace sstocker.budget.Helpers
         {
             var files = Directory.GetFiles(Directory.GetCurrentDirectory(), name, SearchOption.AllDirectories);
             return files.Single();
-        }
-
-        private (string, string) CreateChart(Chart chart, string fileName, string folderName)
-        {
-            if(!Directory.Exists(folderName))
-            {
-                Directory.CreateDirectory(folderName);
-            }
-
-            var path = $"{folderName}/{fileName}.png";
-
-            chart.ToFile(path);
-
-            return (fileName, Path.GetFullPath(path));
-        }
-
-        private void DeleteCharts(List<(string, string)> charts)
-        {
-            if(charts == null || !charts.Any())
-            {
-                return;
-            }
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            foreach (var chart in charts)
-            {
-                File.Delete(chart.Item2);
-            }
         }
 
         private Chart RadialGauge(int percentage, string color)
@@ -211,6 +177,11 @@ namespace sstocker.budget.Helpers
 ";
 
             return chart;
+        }
+
+        private string GetChartUrl(Chart chart)
+        {
+            return chart.GetUrl();
         }
     }
 }
