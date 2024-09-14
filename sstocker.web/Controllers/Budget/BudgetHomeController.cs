@@ -244,7 +244,7 @@ namespace sstocker.web.Controllers
             {
                 var amount = GetOweAmount(accountId, sharedAccountId, month);
 
-                if (amount != 0)
+                if (Math.Abs(amount) >= 20)
                     owedAmount.Add(new Tuple<DateTime, decimal>(month, amount));
             }
 
@@ -253,6 +253,8 @@ namespace sstocker.web.Controllers
 
         private decimal GetOweAmount(long accountId, long sharedAccountId, DateTime month)
         {
+            var minimum = 200;
+
             var expenses = ExpenseRepository.GetAccountExpenses(sharedAccountId);
             expenses = expenses.Where(e => e.SpentDate.Year == month.Year && e.SpentDate.Month == month.Month).ToList();
 
@@ -262,6 +264,12 @@ namespace sstocker.web.Controllers
             var yourIncomeTotal = IncomeRepository.GetAccountIncome(accountId).Where(i => i.IncomeDate.Year == month.Year && i.IncomeDate.Month == month.Month).Sum(i => i.Amount);
             var partnerIncomeTotal = IncomeRepository.GetPartnerIncome(accountId).Where(i => i.IncomeDate.Year == month.Year && i.IncomeDate.Month == month.Month).Sum(i => i.Amount);
             var yourPercentage = yourIncomeTotal + partnerIncomeTotal == 0 ? 0 : yourIncomeTotal / (yourIncomeTotal + partnerIncomeTotal);
+            var partnerPercentage = 1 - yourPercentage;
+
+            if(yourIncomeTotal <= minimum || partnerIncomeTotal <= minimum)
+            {
+                return 0;
+            }
 
             var sharedSpentTotal = expenses.Sum(e => e.Amount);
             var yourSharedSpentTotal = expenses.Where(e => e.SpentAccountId == accountId).Sum(e => e.Amount);
@@ -271,7 +279,12 @@ namespace sstocker.web.Controllers
             var youRecieved = transfers.Where(t => t.PayedAccountId == accountId).Sum(t => t.Amount);
 
             var finalAmount = Math.Round(yourIdealSpentTotal - yourSharedSpentTotal, 2);
+            if (partnerIncomeTotal + finalAmount <= minimum)
+            {
+                finalAmount = partnerIncomeTotal - 200;
+            }
             finalAmount = finalAmount - youPayed + youRecieved;
+
 
             return finalAmount;
         }
