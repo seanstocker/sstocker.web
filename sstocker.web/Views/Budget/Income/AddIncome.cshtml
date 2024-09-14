@@ -47,7 +47,10 @@
         </div>
 
         <br />
-        <span class="btn btn-primary" style="width: 100%" onclick="SaveIncome()">Save</span>
+        <span class="btn btn-primary" style="width: 100%" onclick="SaveIncome(')">Save</span>
+        <br />
+        <br />
+        <span class="btn btn-primary" style="width: 100%" onclick="SaveIncomeAndReload()">Save and Add Another</span>
         <br />
         <br />
         <span class="btn btn-secondary" style="width: 100%" onclick="window.location.href='@Url.Action("Dashboard", "BudgetHome")';">Cancel</span>
@@ -74,7 +77,7 @@
             document.getElementById("DateInput").value = today;
         });
 
-        function SaveIncome() {
+        function SaveIncome(successAction, successController) {
             $.ajax(
                 {
                     type: "POST",
@@ -92,6 +95,32 @@
                         console.log(result);
                         if (result.status == true) {
                             window.location.href = '@Url.Action("Dashboard", "BudgetHome")';
+                        }
+                        else {
+                            alert(result.message);
+                        }
+                    }
+                });
+        }
+
+        function SaveIncomeAndReload(successAction, successController) {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: '@Url.Action("SaveIncome", "Income")',
+                    data: {
+                        source: $('#SourceInput').val(),
+                        type: $('#TypeInput').val(),
+                        amount: $('#AmountInput').val(),
+                        date: $('#DateInput').val(),
+                    },
+                    error: function () {
+                        alert("There is a Problem, Try Again!");
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        if (result.status == true) {
+                        window.location.href = '@Url.Action("AddIncome", "Income")';
                         }
                         else {
                             alert(result.message);
